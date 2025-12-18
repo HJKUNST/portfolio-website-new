@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import clsx from "clsx";
@@ -16,18 +17,22 @@ const defaultTeams: PortfolioTeam[] = [
   {
     name: "EISEN Labs",
     detail: "DeFi trading & hedging UI with live microinteractions.",
+    image: "/1st.png",
   },
   {
     name: "HODL Bot",
     detail: "Brand & interaction patterns for bot experience.",
+    image: "/2nd.png",
   },
   {
     name: "Product Summit",
     detail: "Storytelling deck for trading interfaces.",
+    image: "/3rd.png",
   },
   {
     name: "Studio",
     detail: "Design engineering + prototypes.",
+    image: "/4th.png",
   },
 ];
 
@@ -46,7 +51,7 @@ export const TeamsSection = ({ headline, teams }: Props) => {
             key={team.name}
             onClick={() => setSelected(team)}
             className={clsx(
-              "relative h-[240px] overflow-hidden rounded-3xl border border-white/50 bg-white/70 p-4 text-left shadow-lg backdrop-blur",
+              "relative h-[240px] overflow-hidden rounded-3xl text-left shadow-lg",
               "transition-transform duration-300 hover:-translate-y-1",
             )}
             animate={{
@@ -60,18 +65,27 @@ export const TeamsSection = ({ headline, teams }: Props) => {
               ease: "easeInOut",
             }}
           >
-            <div className="absolute inset-0 gradient-spotlight opacity-70" />
-            <div className="relative z-10 flex h-full flex-col justify-between">
-              <div>
-                <span className="text-em uppercase tracking-[0.08em] text-gray-300">
-                  {idx + 1 < 10 ? `0${idx + 1}` : idx + 1}
-                </span>
-                <h3 className="mt-2 text-xl font-semibold tracking-tight text-gray-900">
-                  {team.name}
-                </h3>
-                <p className="mt-2 text-body">{team.detail}</p>
-              </div>
-              <span className="text-em text-gray-900">Tap to open</span>
+            {team.image ? (
+              <>
+                <Image
+                  src={team.image}
+                  alt={team.name}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+                <div className="absolute inset-0" />
+              </>
+            ) : (
+              <div className="absolute inset-0 gradient-spotlight opacity-70" />
+            )}
+            <div className="relative z-10 flex h-full flex-col justify-end p-4">
+              <span className="tracking-[0.08em]">
+                {idx + 1 < 10 ? `0${idx + 1}` : idx + 1}
+              </span>
+              <h3 className="mt-1 text-xl font-semibold tracking-tight text-white">
+                {team.name}
+              </h3>
             </div>
           </motion.button>
         ))}

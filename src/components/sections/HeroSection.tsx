@@ -3,16 +3,42 @@
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import clsx from "clsx";
+import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
+
 import { PortfolioCard } from "@/lib/figma/types";
 import { getGSAP } from "@/lib/motion/gsap";
 import { prefersReducedMotion } from "@/lib/motion/constants";
 import styles from "./HeroSection.module.css";
-import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 
-const CARD_STYLE_WIDTH = "clamp(370px, 33vw, 640px)";
-const CARD_BASE_WIDTH = 480;
-const GAP = 8;
-const STEP_BASE = Math.round(CARD_BASE_WIDTH * 0.75 + GAP);
+// ============================================
+// Constants
+// ============================================
+
+const GAP = 2;
+const WHEEL_COOLDOWN_MS = 500;
+const ANIMATION_DURATION = 0.5;
+
+/** 카드 타이틀 → 이미지 경로 매핑 */
+const CARD_IMAGES: Record<string, string> = {
+  "EISEN Labs": "/eisen app.png",
+  "Graphic Design & Marketing": "/eisen graphic.png",
+  "Hyperliquid Portal": "/hodl.png",
+  "Hedging the FX Market": "/tgif.png",
+};
+
+const DEFAULT_IMAGE = "/tgif.png";
+
+/** 기본 카드 데이터 (props.cards가 비어있을 때 사용) */
+const DEFAULT_CARDS: PortfolioCard[] = [
+  { title: "EISEN Labs", subtitle: "Pump your profit potential" },
+  { title: "Graphic Design & Marketing", subtitle: "Works of Eisen" },
+  { title: "Hyperliquid Portal", subtitle: "No unified path to trade" },
+  { title: "Hedging the FX Market", subtitle: "KRW native stables to hedge FX risk" },
+];
+
+// ============================================
+// Types
+// ============================================
 
 type Props = {
   headline: string;
@@ -20,174 +46,273 @@ type Props = {
   cards: PortfolioCard[];
 };
 
-type PaddedCard =
-  | (PortfolioCard & { _key: string })
-  | {
-    _key: string;
-    placeholder: true;
-  };
+type CardWithKey = PortfolioCard & { _key: string };
+
+// ============================================
+// Main Component
+// ============================================
 
 export const HeroSection = ({ headline, tags, cards }: Props) => {
-  const trackRef = useRef<HTMLDivElement | null>(null);
-  const indexRef = useRef(1);
-  const [index, setIndex] = useState(0);
-  const STEP = STEP_BASE;
+  // Refs
+  const containerRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const isTransitioningRef = useRef(false);
+  const lastWheelTimeRef = useRef(0);
+
+  // State
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [cardWidth, setCardWidth] = useState(0);
+
+  // Derived values
   const marqueeText = useMemo(() => tags.join(" · "), [tags]);
-  const cardImages = useMemo(
-    () => ({
-      "EISEN Labs": "/eisen app.png",
-      "Graphic Design & Marketing": "/eisen graphic.png",
-      "Hyperliquid Portal": "/hodl.png",
-      "Hedging the FX Market": "/tgif.png",
-      default: "/tgif.png",
-    }),
-    [],
-  );
+  const itemWidth = cardWidth + GAP;
 
-  const heroCards = useMemo(() => {
-    const base =
-      cards.length > 0
-        ? cards
-        : [
-          { title: "EISEN Labs", subtitle: "Pump your profit potential" },
-          { title: "Finance Marketing", subtitle: "Works of Eisen" },
-          { title: "Hyperliquid Portal", subtitle: "No unified path to trade" },
-          { title: "Hedging the FX Market", subtitle: "KRW native stables to hedge FX risk" },
-        ];
-    return base.map((card, idx) => ({
+  // 카드 데이터 준비 (props 또는 기본값 사용)
+  const heroCards = useMemo<CardWithKey[]>(() => {
+    const baseCards = cards.length > 0 ? cards : DEFAULT_CARDS;
+
+    return baseCards.map((card, idx) => ({
       ...card,
-      image: card.image ?? cardImages[card.title as keyof typeof cardImages] ?? cardImages.default,
-      _key: `${card.title}-${idx}`,
+      image: card.image ?? CARD_IMAGES[card.title] ?? DEFAULT_IMAGE,
+      _key: `hero-card-${idx}`,
     }));
-  }, [cardImages, cards]);
+  }, [cards]);
 
-  const paddedCards = useMemo(() => {
-    if (heroCards.length === 0) return [];
-    const first = heroCards[0];
-    const last = heroCards[heroCards.length - 1];
-    return [
-      { ...last, _key: `${last._key}-clone-last` } satisfies PaddedCard,
-      ...heroCards,
-      { ...first, _key: `${first._key}-clone-first` } satisfies PaddedCard,
-    ];
-  }, [heroCards]);
+  const totalCards = heroCards.length;
+  const lastIndex = Math.max(totalCards - 1, 0);
+  const isAtStart = currentIndex === 0;
+  const isAtEnd = currentIndex === lastIndex;
 
-  const FIRST = 1;
-  const LAST = Math.max(heroCards.length, 1);
+  // ============================================
+  // Carousel Navigation
+  // ============================================
 
-  const animateStep = useCallback(
-    (delta: number) => {
-      if (!trackRef.current) return;
-      const gsap = getGSAP();
-      const current = indexRef.current;
-      const visualTarget = Math.min(Math.max(current + delta, 0), LAST + 1);
-      const snapIndex = visualTarget > LAST ? FIRST : visualTarget < FIRST ? LAST : visualTarget;
+  /** 트랙 위치를 즉시 설정 (애니메이션 없음) */
+  const setPositionInstant = useCallback((index: number) => {
+    if (!trackRef.current || itemWidth === 0) return;
 
-      const handleSnap = () => {
-        if (!trackRef.current) return;
-        trackRef.current.style.transform = `translateX(${-snapIndex * STEP}px)`;
-        indexRef.current = snapIndex;
-        setIndex(snapIndex);
-      };
+    const x = -index * itemWidth;
+    const gsap = getGSAP();
 
-      if (!gsap || prefersReducedMotion()) {
-        handleSnap();
-        return;
-      }
+    if (gsap) {
+      gsap.set(trackRef.current, { x });
+    } else {
+      trackRef.current.style.transform = `translateX(${x}px)`;
+    }
+  }, [itemWidth]);
 
-      gsap.killTweensOf(trackRef.current);
+  /** 트랙을 특정 인덱스로 애니메이션 */
+  const animateToIndex = useCallback((index: number, onComplete?: () => void) => {
+    if (!trackRef.current || itemWidth === 0) return;
 
-      gsap.to(trackRef.current, {
-        x: -visualTarget * STEP,
-        duration: 0.6,
-        ease: "power2.out",
-        onComplete: handleSnap,
-      });
-    },
-    [FIRST, LAST, STEP],
-  );
+    const x = -index * itemWidth;
+    const gsap = getGSAP();
 
-  const handleNext = useCallback(() => animateStep(1), [animateStep]);
-  const handlePrev = useCallback(() => animateStep(-1), [animateStep]);
+    if (!gsap || prefersReducedMotion()) {
+      setPositionInstant(index);
+      onComplete?.();
+      return;
+    }
 
+    gsap.to(trackRef.current, {
+      x,
+      duration: ANIMATION_DURATION,
+      ease: "power2.out",
+      onComplete,
+    });
+  }, [itemWidth, setPositionInstant]);
+
+  /** 특정 인덱스로 이동 (범위 제한 적용) */
+  const goToIndex = useCallback((newIndex: number) => {
+    if (isTransitioningRef.current || totalCards === 0) return;
+
+    const clampedIndex = Math.max(0, Math.min(newIndex, lastIndex));
+    if (clampedIndex === currentIndex) return;
+
+    isTransitioningRef.current = true;
+
+    animateToIndex(clampedIndex, () => {
+      setCurrentIndex(clampedIndex);
+      isTransitioningRef.current = false;
+    });
+  }, [totalCards, lastIndex, currentIndex, animateToIndex]);
+
+  const goNext = useCallback(() => goToIndex(currentIndex + 1), [goToIndex, currentIndex]);
+  const goPrev = useCallback(() => goToIndex(currentIndex - 1), [goToIndex, currentIndex]);
+
+  // ============================================
+  // Effects
+  // ============================================
+
+  /** 컨테이너 높이 기반으로 카드 너비 계산 (4:3 비율 유지) */
   useEffect(() => {
-    // Reset position when data changes
-    if (!trackRef.current) return;
-    trackRef.current.style.transform = `translateX(${-FIRST * STEP}px)`;
-    indexRef.current = FIRST;
-    setIndex(FIRST);
-  }, [FIRST, STEP, heroCards]);
+    const updateCardWidth = () => {
+      if (!containerRef.current) return;
+      const height = containerRef.current.offsetHeight;
+      setCardWidth(Math.round(height * (4 / 3)));
+    };
+
+    updateCardWidth();
+    window.addEventListener("resize", updateCardWidth);
+    return () => window.removeEventListener("resize", updateCardWidth);
+  }, []);
+
+  /** 초기 위치 설정 */
+  useEffect(() => {
+    setCurrentIndex(0);
+    setPositionInstant(0);
+  }, [heroCards, setPositionInstant]);
+
+  /** 리사이즈 시 현재 위치 유지 */
+  useEffect(() => {
+    if (cardWidth > 0) {
+      setPositionInstant(currentIndex);
+    }
+  }, [cardWidth, currentIndex, setPositionInstant]);
+
+  /** 휠 스크롤로 캐러셀 탐색 */
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      // 가로 스크롤은 무시
+      if (Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
+      e.preventDefault();
+
+      // 쿨다운 체크
+      const now = Date.now();
+      if (now - lastWheelTimeRef.current < WHEEL_COOLDOWN_MS) return;
+      if (isTransitioningRef.current) return;
+
+      lastWheelTimeRef.current = now;
+
+      if (e.deltaY > 0) goNext();
+      else if (e.deltaY < 0) goPrev();
+    };
+
+    container.addEventListener("wheel", handleWheel, { passive: false });
+    return () => container.removeEventListener("wheel", handleWheel);
+  }, [goNext, goPrev]);
+
+  // ============================================
+  // Render
+  // ============================================
 
   return (
     <section className="section-shell flex flex-col">
-      <div className="flex flex-col gap-3">
+      {/* Header */}
+      <div className="flex flex-col">
         <p className="text-h3-em">{headline}</p>
-        <div className={clsx(styles.marqueeWrapper, "text-body text-gray-500")} aria-label={marqueeText}>
-          <div className={styles.marqueeContent}>
-            {[0, 1].map((i) => (
-              <span key={i} className={styles.marqueeText}>
-                {marqueeText}
-              </span>
-            ))}
-          </div>
+        <TagsMarquee text={marqueeText} />
+      </div>
+
+      {/* Carousel */}
+      <div
+        ref={containerRef}
+        className="relative overflow-hidden py-4 bg-[rgba(206,225,226,0.2)]"
+        style={{ height: "min(65vh, 600px)" }}
+      >
+        <div
+          ref={trackRef}
+          className="flex h-full items-stretch"
+          style={{ gap: GAP, width: "max-content" }}
+        >
+          {heroCards.map((card) => (
+            <HeroCard key={card._key} card={card} />
+          ))}
         </div>
       </div>
 
-      <div className="relative overflow-hidden" style={{ height: "min(70vh, 720px)" }}>
-        <div className="flex h-full items-stretch gap-4" ref={trackRef} style={{ width: "max-content" }}>
-          {paddedCards.map((card) =>
-            "placeholder" in card ? (
-              <div
-                key={card._key}
-                className="flex-none"
-                style={{ height: "100%", aspectRatio: "4 / 3", minWidth: "370px" }}
-                aria-hidden
-              />
-            ) : (
-              <HeroCard key={card._key} card={card} />
-            ),
-          )}
-        </div>
-      </div>
-
-      <div className="mt-4 flex items-center justify-between">
-        <button
-          className="flex items-center gap-2px-4"
-          onClick={handlePrev}
-          aria-label="Previous"
-        >
-          <ChevronLeftIcon aria-hidden />
-        </button>
-        <button
-          className="flex items-center gap-2px-4"
-          onClick={handleNext}
-          aria-label="Next"
-        >
-          <ChevronRightIcon aria-hidden />
-        </button>
-      </div>
+      {/* Navigation */}
+      <CarouselNav
+        onPrev={goPrev}
+        onNext={goNext}
+        isAtStart={isAtStart}
+        isAtEnd={isAtEnd}
+      />
     </section>
   );
 };
 
-const HeroCard = ({
-  card,
+// ============================================
+// Sub Components
+// ============================================
+
+/** 태그 마르키 애니메이션 */
+const TagsMarquee = ({ text }: { text: string }) => (
+  <div className={clsx(styles.marqueeWrapper, "text-body text-gray-500")} aria-label={text}>
+    <div className={styles.marqueeContent}>
+      {[0, 1].map((i) => (
+        <span key={i} className={styles.marqueeText}>
+          {text}
+        </span>
+      ))}
+    </div>
+  </div>
+);
+
+/** 캐러셀 네비게이션 버튼 */
+const CarouselNav = ({
+  onPrev,
+  onNext,
+  isAtStart,
+  isAtEnd,
 }: {
-  card: PortfolioCard;
+  onPrev: () => void;
+  onNext: () => void;
+  isAtStart: boolean;
+  isAtEnd: boolean;
 }) => {
+  const buttonBase = "flex items-center gap-2 px-4 py-2 rounded-full transition";
+  const buttonActive = "bg-gray-100 hover:bg-gray-200";
+  const buttonDisabled = "bg-gray-50 text-gray-300 cursor-not-allowed";
+
   return (
-    <div
-      className={clsx(
-        "relative flex h-full flex-none flex-col justify-end overflow-hidden rounded-sm",
-      )}
-      style={{ height: "100%", aspectRatio: "4 / 3", minWidth: "370px" }}
-    >
-      {card.image ? (
-        <Image src={card.image} alt={card.title} fill className="object-cover" priority />
-      ) : null}
-      <div className="relative z-10 p-6 flex flex-col gap-2">
-      </div>
+    <div className="mt-6 flex items-center justify-between">
+      <button
+        className={clsx(buttonBase, isAtStart ? buttonDisabled : buttonActive)}
+        onClick={onPrev}
+        disabled={isAtStart}
+        aria-label="Previous"
+      >
+        <ChevronLeftIcon aria-hidden />
+      </button>
+      <button
+        className={clsx(buttonBase, isAtEnd ? buttonDisabled : buttonActive)}
+        onClick={onNext}
+        disabled={isAtEnd}
+        aria-label="Next"
+      >
+        <ChevronRightIcon aria-hidden />
+      </button>
     </div>
   );
 };
 
+/** 히어로 카드 */
+const HeroCard = ({ card }: { card: CardWithKey }) => (
+  <div
+    className="relative flex-none overflow-hidden rounded-lg h-full"
+    style={{ aspectRatio: "4 / 3" }}
+  >
+    {card.image ? (
+      <Image
+        src={card.image}
+        alt={card.title}
+        fill
+        className="object-cover"
+        priority
+        quality={300}
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+      />
+    ) : (
+      <div className="absolute inset-0 bg-gray-200" />
+    )}
+    {/* Inset shadow overlay - 이미지 위에 항상 표시 */}
+    <div
+      className="absolute inset-0 pointer-events-none"
+      style={{ boxShadow: "inset 0 0 50px 0 #85adaf" }}
+    />
+  </div>
+);
