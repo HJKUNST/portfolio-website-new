@@ -38,10 +38,6 @@ export type PortfolioFigmaModel = {
     tags: string[];
     cards: PortfolioCard[];
   };
-  belief: {
-    headline: string;
-    emphasis: string;
-  };
   craftery: {
     steps: string[];
   };

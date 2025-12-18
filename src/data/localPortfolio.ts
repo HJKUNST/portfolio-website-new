@@ -40,11 +40,6 @@ export const localPortfolio: PortfolioFigmaModel = {
       },
     ],
   },
-  belief: {
-    headline:
-      "I believe the strongest products are built through shared craft — small teams working in rhythm, shaping and refining until the surface finally holds.",
-    emphasis: "shared craft",
-  },
   craftery: {
     steps: [
       "I design with the mindset of shared craftery,",
@@ -68,23 +63,27 @@ export const localPortfolio: PortfolioFigmaModel = {
   },
   teamwork: {
     headline:
-      "Teams that I’ve made great outputs with — small teams working in rhythm.",
+      "Teams that I've made great outputs with — small teams working in rhythm.",
     teams: [
       {
         name: "EISEN Labs",
         detail: "Onchain arc & dex aggregator microinteractions.",
+        image: "/1st.png",
       },
       {
         name: "HODL Bot",
         detail: "Brand & interaction patterns for bot experience.",
+        image: "/2nd.png",
       },
       {
         name: "Product Summit",
         detail: "Storytelling decks for trading narratives.",
+        image: "/3rd.png",
       },
       {
         name: "Studio",
         detail: "Design engineering and prototyping.",
+        image: "/4th.png",
       },
     ],
   },

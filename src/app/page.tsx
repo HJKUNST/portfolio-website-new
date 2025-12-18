@@ -1,5 +1,4 @@
 import { SmoothScrollProvider } from "@/components/SmoothScrollProvider";
-import { BeliefFillTextSection } from "@/components/sections/BeliefFillTextSection";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { LookingForTeamSection } from "@/components/sections/LookingForTeamSection";
 import { SharedCrafteryPathSection } from "@/components/sections/SharedCrafteryPathSection";
@@ -17,7 +16,6 @@ export default async function Home() {
         <main className="flex min-h-screen flex-col gap-12 pt-16 pb-24">
           <HeroSection headline={model.hero.headline} tags={model.hero.tags} cards={model.hero.cards} />
           <TeamsSection headline={model.teamwork.headline} teams={model.teamwork.teams} />
-          <BeliefFillTextSection headline={model.belief.headline} emphasis={model.belief.emphasis} />
           <SharedCrafteryPathSection steps={model.craftery.steps} />
           <ValuesArrowFieldSection title={model.offerings.title} items={model.offerings.items} />
           <LookingForTeamSection

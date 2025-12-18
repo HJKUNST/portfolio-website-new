@@ -200,9 +200,9 @@ export const HeroSection = ({ headline, tags, cards }: Props) => {
   // ============================================
 
   return (
-    <section className="section-shell flex flex-col">
+    <section className="section-shell flex flex-col justify-center">
       {/* Header */}
-      <div className="flex flex-col">
+      <div className="flex flex-col mt-10">
         <p className="text-h3-em">{headline}</p>
         <TagsMarquee text={marqueeText} />
       </div>
@@ -211,7 +211,7 @@ export const HeroSection = ({ headline, tags, cards }: Props) => {
       <div
         ref={containerRef}
         className="relative overflow-hidden py-4 bg-[rgba(206,225,226,0.2)]"
-        style={{ height: "min(65vh, 600px)" }}
+        style={{ height: "min(60vh, 640px)" }}
       >
         <div
           ref={trackRef}
@@ -303,7 +303,7 @@ const HeroCard = ({ card }: { card: CardWithKey }) => (
         fill
         className="object-cover"
         priority
-        quality={300}
+        quality={75}
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
       />
     ) : (
