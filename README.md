@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Laura HJ Kim — Portfolio (Next.js)
 
-## Getting Started
+Desktop-first portfolio that mirrors the provided Figma narrative with scroll + cursor microinteractions. Uses Tailwind v4, GSAP/ScrollTrigger, and Radix Dialog, with a data adapter locked to bundled local content (no live Figma dependency).
 
-First, run the development server:
+## Quickstart
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Data (fully local)
+- Renders exclusively from `src/data/localPortfolio.ts`; there are zero network calls or Figma fetches.
+- `.env` values for Figma are not required and are ignored by the runtime; `.gitignore` already excludes any potential secret files.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project map
+- `src/app/page.tsx` — composes sections.
+- `src/app/layout.tsx` — fonts (Manrope, Crimson Pro) + metadata; `globals.css` holds tokens.
+- `src/components/sections/*` — hero 3D-on-scroll, belief fill text scrub, path draw, cursor arrows, teams dialog, CTA letters.
+- `src/components/ui/Dialog.tsx` — Radix dialog with framer-motion polish.
+- `src/lib/figma/*` — adapter + `localPortfolio` fallback; normalization currently returns local data.
+- `src/lib/motion/*` — GSAP registration, scroll helpers, pointer utilities.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Animations & accessibility
+- ScrollTrigger-driven hero perspective, fill text, and SVG path draw; scrubs with offsets and cleans up on unmount.
+- Cursor-follow arrows use RAF throttling; motion gates on `prefers-reduced-motion`.
+- Dialog is keyboard/focus friendly and locks scroll.
 
-## Learn More
+## Scripts
+- `npm run dev` — start dev server.
+- `npm run build` — production build.
+- `npm run start` — serve built assets.
+- `npm run lint` — eslint pass.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Performance & style notes
+- Animate transforms/opacity; avoid layout thrash.
+- Tokens and gradients live in `globals.css`; keep copy in English per design brief.

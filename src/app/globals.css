@@ -1,26 +1,184 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --primary: #88adaf;
+  --primary-bright: #90dde1;
+  --secondary: #fd9a6d;
+  --gray-100: #c5c5c5;
+  --gray-300: #8d8d8d;
+  --gray-900: #0b0b0b;
+  --main-gradient: linear-gradient(to right,
+      #97b29d 0%,
+      #0b0b0b 50%,
+      #85adaf 100%);
+
+  --h1-size: 48px;
+  --h1-letter: -0.02em;
+  --h2-size: 36px;
+  --h2-letter: -0.02em;
+  --h2em-size: 48px;
+  --h2em-letter: -0.04em;
+  --h3em-size: 24px;
+  --h3em-letter: -0.04em;
+  --h4em-size: 18px;
+  --h4em-letter: -0.04em;
+  --em-size: 14px;
+  --em-letter: -0.02em;
+
+  --surface-base: #fbfbfb;
+  --surface-muted: #e7f3f4;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Tailwind v3 doesn't recognize @theme; inline the values in :root to avoid unknownAtRules */
+:root {
+  --color-background: var(--surface-base);
+  --color-foreground: var(--gray-900);
+  --font-sans: var(--font-manrope);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: linear-gradient(180deg, #ffffff 0%, #f3f7f8 28%, #e7f3f4 100%);
+  color: var(--gray-900);
+  font-family: var(--font-manrope), "Manrope", system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: var(--em-letter);
+  line-height: 1.4;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.text-h1-gradient {
+  font-family: var(--font-manrope), "Manrope", sans-serif;
+  font-size: var(--h1-size);
+  font-weight: 500;
+  letter-spacing: var(--h1-letter);
+  background: var(--main-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-h2 {
+  font-family: var(--font-manrope), "Manrope", sans-serif;
+  font-size: var(--h2-size);
+  font-weight: 500;
+  letter-spacing: var(--h2-letter);
+  color: var(--gray-900);
+}
+
+.text-h2-em {
+  font-family: var(--font-crimson), "Crimson Pro", serif;
+  font-size: var(--h2em-size);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: var(--h2em-letter);
+  color: var(--secondary);
+}
+
+.text-h3-em {
+  font-family: var(--font-crimson), "Crimson Pro", serif;
+  font-size: var(--h3em-size);
+  font-weight: 500;
+  letter-spacing: var(--h3em-letter);
+  background: var(--main-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-h4-em {
+  font-family: var(--font-crimson), "Crimson Pro", serif;
+  font-size: var(--h4em-size);
+  font-weight: 400;
+  letter-spacing: var(--h4em-letter);
+  color: var(--gray-900);
+}
+
+.text-em {
+  font-family: var(--font-manrope), "Manrope", sans-serif;
+  font-size: var(--em-size);
+  font-weight: 500;
+  letter-spacing: var(--em-letter);
+  color: var(--gray-900);
+}
+
+.text-secondary {
+  color: var(--secondary);
+}
+
+.text-body {
+  font-family: var(--font-manrope), "Manrope", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: var(--em-letter);
+  color: var(--gray-300);
+}
+
+.section-shell {
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+  padding: 72px 24px;
+  min-height: 80vh;
+}
+
+.glass {
+  backdrop-filter: blur(30px);
+  background: rgba(202, 202, 202, 0.2);
+}
+
+.card-surface {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 20px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.08);
+}
+
+.gradient-spotlight {
+  background: radial-gradient(circle at 50% 50%,
+      rgba(144, 221, 225, 0.35) 0%,
+      rgba(144, 221, 225, 0) 65%);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 960px) {
+  .section-shell {
+    padding: 64px 16px;
+  }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

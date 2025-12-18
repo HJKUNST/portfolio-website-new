@@ -30,8 +30,11 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files (secrets, e.g., FIGMA_TOKEN / FIGMA_FILE_KEY)
 .env*
+# optional explicit figma creds files
+figma-token.txt
+figma-key.txt
 
 # vercel
 .vercel
