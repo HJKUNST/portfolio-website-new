@@ -41,8 +41,12 @@ export const Dialog = ({
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0, transition: { duration: 0.3 } }}
               exit={{ opacity: 0, y: 12, transition: { duration: 0.2 } }}
+              onClick={() => onOpenChange?.(false)}
             >
-              <div className={clsx("card-surface max-w-xl w-full p-8 relative")}>
+              <div
+                className={clsx("card-surface max-w-xl w-full p-8 relative")}
+                onClick={(e) => e.stopPropagation()}
+              >
                 <DialogPrimitive.Title className="text-h2 text-left">
                   {title}
                 </DialogPrimitive.Title>

@@ -30,6 +30,10 @@ export type PortfolioTeam = {
   name: string;
   detail: string;
   image?: string;
+  // 다이얼로그에 표시될 상세 정보
+  surfaces?: string[];    // 예: ["Mobile App", "Web Dashboard"]
+  industry?: string;      // 예: "DeFi / Crypto"
+  description?: string;   // 상세 설명
 };
 
 export type PortfolioFigmaModel = {

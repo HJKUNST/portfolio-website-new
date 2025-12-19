@@ -85,21 +85,33 @@ const DEFAULT_TEAMS: PortfolioTeam[] = [
     name: "EISEN Labs",
     detail: "DeFi trading & hedging UI with live microinteractions.",
     image: "/1st.png",
+    surfaces: ["Mobile App", "Web Dashboard", "Design System"],
+    industry: "DeFi / Crypto",
+    description: "Led the end-to-end design of a DeFi trading platform, focusing on intuitive hedging interfaces and real-time microinteractions that help users make informed decisions quickly.",
   },
   {
     name: "HODL Bot",
     detail: "Brand & interaction patterns for bot experience.",
     image: "/2nd.png",
+    surfaces: ["Telegram Bot", "Brand Identity", "Marketing"],
+    industry: "Crypto Trading",
+    description: "Created the brand identity and interaction patterns for an automated trading bot, ensuring a seamless user experience across Telegram and web interfaces.",
   },
   {
     name: "Product Summit",
     detail: "Storytelling deck for trading interfaces.",
     image: "/3rd.png",
+    surfaces: ["Pitch Deck", "Presentation", "Visual Design"],
+    industry: "FinTech",
+    description: "Designed compelling storytelling decks that communicate complex trading narratives, helping teams secure funding and partnerships.",
   },
   {
     name: "Studio",
     detail: "Design engineering + prototypes.",
     image: "/4th.png",
+    surfaces: ["Prototypes", "Design Engineering", "R&D"],
+    industry: "Design Agency",
+    description: "A personal design studio focused on experimental prototypes and design engineering, pushing boundaries of what's possible in interface design.",
   },
 ];
 
@@ -164,11 +176,33 @@ const TeamDialog = ({
       description={team.detail}
       trigger={<span className="sr-only">open</span>}
     >
-      <p className="text-body">
-        I love building in small, focused teams where everyone owns both the craft and the
-        outcome. Reach out if you'd like to jam on similar problems.
-      </p>
-      <div className="mt-4 text-em text-gray-900">Click × or press Esc to close.</div>
+      {/* Industry */}
+      {team.industry && (
+        <p className="text-body font-medium mb-4">{team.industry}</p>
+      )}
+
+      {/* Surfaces */}
+      {team.surfaces && team.surfaces.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          {team.surfaces.map((surface) => (
+            <span
+              key={surface}
+              className="px-3 py-1 text-em bg-[rgba(206,225,226,0.3)] rounded-full"
+            >
+              {surface}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Description */}
+      {team.description && (
+        <p className="text-body mb-4">{team.description}</p>
+      )}
+
+      <div className="mt-6 pt-4 border-t border-gray-200 text-em text-gray-300">
+        Click anywhere outside or press Esc to close.
+      </div>
     </Dialog>
   );
 };
