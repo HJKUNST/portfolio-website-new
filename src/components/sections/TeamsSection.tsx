@@ -85,9 +85,9 @@ const DEFAULT_TEAMS: PortfolioTeam[] = [
     name: "EISEN Labs",
     detail: "DeFi trading & hedging UI with live microinteractions.",
     image: "/1st.png",
-    surfaces: ["Mobile App", "Web Dashboard", "Design System"],
-    industry: "DeFi / Crypto",
-    description: "Led the end-to-end design of a DeFi trading platform, focusing on intuitive hedging interfaces and real-time microinteractions that help users make informed decisions quickly.",
+    surfaces: ["DAPP"],
+    industry: "DeFi",
+    description: "Eisen is a multichain DEX aggregator on 20+ chains, expanding with V2 to support both CEX and DEX trading, including spot and derivatives. \n Worked as a solo designer / marketer in the tech-focused defi startup, building every visual materials from zero to one including the dapp experience, landing page which had resulted product growth from $10K to $10M Daily.",
   },
   {
     name: "HODL Bot",
@@ -172,36 +172,39 @@ const TeamDialog = ({
       onOpenChange={(open) => {
         if (!open) onClose();
       }}
-      title={team.name}
+      title=""
       description={team.detail}
       trigger={<span className="sr-only">open</span>}
     >
-      {/* Industry */}
-      {team.industry && (
-        <p className="text-body font-medium mb-4">{team.industry}</p>
-      )}
+      <div style={{ color: "white" }}>
+        {/* Header row: Title (left) | Industry & Surfaces (right) */}
+        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
+          {/* Title - left aligned, can wrap */}
+          <h2 className="text-h2 text-left min-w-0" style={{ color: "inherit" }}>{team.name}</h2>
 
-      {/* Surfaces */}
-      {team.surfaces && team.surfaces.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-4">
-          {team.surfaces.map((surface) => (
-            <span
-              key={surface}
-              className="px-3 py-1 text-em bg-[rgba(206,225,226,0.3)] rounded-full"
-            >
-              {surface}
-            </span>
-          ))}
+          {/* Industry | Surfaces - right aligned */}
+          <div className="flex items-center gap-2 text-body text-right flex-wrap justify-end shrink-0" style={{ color: "inherit" }}>
+            {team.industry && <span>{team.industry}</span>}
+            {team.industry && team.surfaces && team.surfaces.length > 0 && (
+              <span>|</span>
+            )}
+            {team.surfaces && team.surfaces.length > 0 && (
+              <>
+                {team.surfaces.map((surface, idx) => (
+                  <span key={surface} className="flex items-center gap-2">
+                    {idx > 0 && <span>-</span>}
+                    {surface}
+                  </span>
+                ))}
+              </>
+            )}
+          </div>
         </div>
-      )}
 
-      {/* Description */}
-      {team.description && (
-        <p className="text-body mb-4">{team.description}</p>
-      )}
-
-      <div className="mt-6 pt-4 border-t border-gray-200 text-em text-gray-300">
-        Click anywhere outside or press Esc to close.
+        {/* Description */}
+        {team.description && (
+          <p className="text-body mt-20 mb-4 whitespace-pre-line" style={{ color: "inherit" }}>{team.description}</p>
+        )}
       </div>
     </Dialog>
   );
@@ -219,7 +222,7 @@ export const TeamsSection = ({ headline, teams }: Props) => {
   const [selectedTeam, setSelectedTeam] = useState<PortfolioTeam | null>(null);
 
   return (
-    <section className="section-shell overflow-visible relative">
+    <section className="section-shell overflow-visible relative" style={{ paddingBottom: "0px" }}>
       {/* 섹션 배경 그라데이션 */}
       <div
         className="absolute pointer-events-none"
@@ -245,7 +248,7 @@ export const TeamsSection = ({ headline, teams }: Props) => {
         }}
       >{`// Teams that I've made great outputs with`}</p>
       <p
-        className="my-6 text-h2 text-gray-900 leading-snug w-[50%]"
+        className="my-6 text-h2 text-gray-900 leading-snug w-[50%] pb-[8%]"
       >
         I believe the strongest products are built through{" "}
         <span className="text-h2-em text-secondary align-baseline" style={{ lineHeight: 0.9 }}>shared craft</span>
@@ -254,7 +257,7 @@ export const TeamsSection = ({ headline, teams }: Props) => {
 
       {/* 카드 그리드 */}
       <div
-        className={`${GRID_CONFIG.marginTop} relative w-full grid sm:grid-cols-2 lg:grid-cols-4 justify-items-center`}
+        className={`${GRID_CONFIG.marginTop} relative w-full grid sm:grid-cols-2 lg:grid-cols-4 justify-items-center `}
         style={{
           paddingLeft: GRID_CONFIG.paddingLeft,
           paddingRight: GRID_CONFIG.paddingRight,

@@ -133,8 +133,12 @@ img {
   width: 100%;
   max-width: none;
   margin: 0 auto;
-  padding: 72px 24px;
-  min-height: 80vh;
+  padding: 0px 24px;
+  min-height: 85vh;
+}
+
+.section-shell .SharedCrafteryPathSection {
+  min-height: 100vh;
 }
 
 .glass {

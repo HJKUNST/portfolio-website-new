@@ -14,16 +14,16 @@ export default async function Home() {
       <SiteNav />
       <SmoothScrollProvider>
         <main className="flex min-h-screen flex-col gap-12 pt-16 pb-24">
-          <HeroSection headline={model.hero.headline} tags={model.hero.tags} cards={model.hero.cards} />
-          <TeamsSection headline={model.teamwork.headline} teams={model.teamwork.teams} />
-          <SharedCrafteryPathSection steps={model.craftery.steps} />
-          <ValuesArrowFieldSection title={model.offerings.title} items={model.offerings.items} />
-          <LookingForTeamSection
-            headline={model.cta.headline}
-            subheadline={model.cta.subheadline}
-            contactLabel={model.cta.contactLabel}
-            icons={model.cta.icons}
-          />
+      <HeroSection headline={model.hero.headline} tags={model.hero.tags} cards={model.hero.cards} />
+      <TeamsSection headline={model.teamwork.headline} teams={model.teamwork.teams} />
+      <SharedCrafteryPathSection steps={model.craftery.steps} />
+      <ValuesArrowFieldSection title={model.offerings.title} items={model.offerings.items} />
+      <LookingForTeamSection
+        headline={model.cta.headline}
+        subheadline={model.cta.subheadline}
+        contactLabel={model.cta.contactLabel}
+        icons={model.cta.icons}
+      />
         </main>
       </SmoothScrollProvider>
       <SiteFooter />

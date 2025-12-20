@@ -43,8 +43,12 @@ export const Dialog = ({
               exit={{ opacity: 0, y: 12, transition: { duration: 0.2 } }}
               onClick={() => onOpenChange?.(false)}
             >
-              <div
-                className={clsx("card-surface max-w-xl w-full p-8 relative")}
+              <motion.div
+                className={clsx("bg-[rgba(206,225,226,0.3)] border border-[rgb(206,225,226)] rounded-3xl max-w-xl w-full p-6 relative")}
+                style={{ boxShadow: "inset 0 4px 50px 0 rgba(206,225,226,0.1)" }}
+                initial={{ backdropFilter: "blur(0px)" }}
+                animate={{ backdropFilter: "blur(24px)", transition: { duration: 1.0 } }}
+                exit={{ backdropFilter: "blur(0px)", transition: { duration: 0.1 } }}
                 onClick={(e) => e.stopPropagation()}
               >
                 <DialogPrimitive.Title className="text-h2 text-left">
@@ -55,11 +59,8 @@ export const Dialog = ({
                     {description}
                   </DialogPrimitive.Description>
                 ) : null}
-                <div className="mt-6">{children}</div>
-                <DialogPrimitive.Close className="absolute right-4 top-4 text-em">
-                  ×
-                </DialogPrimitive.Close>
-              </div>
+                <div>{children}</div>
+              </motion.div>
             </motion.div>
           </DialogPrimitive.Content>
         </AnimatePresence>

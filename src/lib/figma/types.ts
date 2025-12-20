@@ -1,9 +1,9 @@
 export type FigmaPaint =
   | string
   | {
-      type: "GRADIENT_LINEAR" | "GRADIENT_RADIAL";
-      gradient: string;
-    };
+    type: "GRADIENT_LINEAR" | "GRADIENT_RADIAL";
+    gradient: string;
+  };
 
 export type FigmaNode = {
   id: string;
@@ -28,7 +28,7 @@ export type PortfolioCard = {
 
 export type PortfolioTeam = {
   name: string;
-  detail: string;
+  detail?: string;        // 선택사항으로 변경
   image?: string;
   // 다이얼로그에 표시될 상세 정보
   surfaces?: string[];    // 예: ["Mobile App", "Web Dashboard"]
