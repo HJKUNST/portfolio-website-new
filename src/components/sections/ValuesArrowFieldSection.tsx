@@ -5,11 +5,32 @@ import clsx from "clsx";
 import { createArrowField } from "@/lib/motion/pointer";
 
 type Props = {
-  title: string;
-  items: string[];
+  title?: string;
+  items?: string[];
 };
 
-export const ValuesArrowFieldSection = ({ title, items }: Props) => {
+// ============================================
+// Default Data (기본 데이터)
+// ============================================
+
+const DEFAULT_TITLE = "Things that I can add values for you";
+
+const DEFAULT_ITEMS = [
+  "User Interface (UI)",
+  "Design System",
+  "Pitch Deck",
+  "UX Research",
+  "Landing Page",
+  "Brand Guideline",
+  "Design Engineering",
+  "Interaction Design",
+  "More Coming Soon…",
+];
+
+export const ValuesArrowFieldSection = ({
+  title = DEFAULT_TITLE,
+  items = DEFAULT_ITEMS
+}: Props) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -24,10 +45,20 @@ export const ValuesArrowFieldSection = ({ title, items }: Props) => {
 
   return (
     <section className="section-shell">
-      <p className="text-h4-em mb-2">{`// ${title}`}</p>
+      <p
+        className="text-h3-em mb-[48px]"
+        style={{
+          background: "var(--main-gradient)",
+          WebkitBackgroundClip: "text",
+          backgroundClip: "text",
+          color: "transparent",
+        }}
+      >
+        {`// ${title}`}
+      </p>
       <div
         ref={containerRef}
-        className="grid gap-px overflow-hidden rounded-2xl border border-gray-100/80 bg-gray-100/30 sm:grid-cols-3"
+        className="grid gap-px overflow-hidden border border-[rgba(206,225,226,1)] sm:grid-cols-3"
       >
         {items.map((item) => (
           <div
@@ -40,12 +71,19 @@ export const ValuesArrowFieldSection = ({ title, items }: Props) => {
             <div>
               <p className="text-2xl font-semibold tracking-tight text-gray-900">{item}</p>
             </div>
-            <span
-              className="arrow-pointer relative inline-flex h-12 w-12 items-center justify-center rounded-full border border-gray-100 bg-gray-50 text-gray-900 shadow-inner"
+            <svg
+              className="arrow-pointer self-end"
+              width="78"
+              height="79"
+              viewBox="0 0 78 79"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
               aria-hidden
             >
-              ➜
-            </span>
+              <line x1="75.9434" y1="39.3552" x2="5.79323e-05" y2="39.3552" stroke="currentColor" strokeWidth="2" />
+              <line x1="75.2363" y1="39.0623" x2="36.881" y2="0.707122" stroke="currentColor" strokeWidth="2" />
+              <line x1="76.6505" y1="39.0623" x2="38.2953" y2="77.4175" stroke="currentColor" strokeWidth="2" />
+            </svg>
           </div>
         ))}
       </div>

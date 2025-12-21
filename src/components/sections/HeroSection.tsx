@@ -28,7 +28,25 @@ const CARD_IMAGES: Record<string, string> = {
 
 const DEFAULT_IMAGE = "/tgif.png";
 
-/** 기본 카드 데이터 (props.cards가 비어있을 때 사용) */
+// ============================================
+// Default Data (기본 데이터)
+// ============================================
+
+const DEFAULT_HEADLINE = "I Bake Interface until They're Ready to Serve";
+
+const DEFAULT_TAGS = [
+  "Product Design",
+  "UX/UI Design",
+  "Intuitive User Experiences",
+  "Blockchain UX",
+  "Prototyping",
+  "Design Systems",
+  "User Research",
+  "Product Strategy",
+  "Data Visualization",
+  "Analytics",
+];
+
 const DEFAULT_CARDS: PortfolioCard[] = [
   { title: "EISEN Labs", subtitle: "Pump your profit potential" },
   { title: "Graphic Design & Marketing", subtitle: "Works of Eisen" },
@@ -41,9 +59,9 @@ const DEFAULT_CARDS: PortfolioCard[] = [
 // ============================================
 
 type Props = {
-  headline: string;
-  tags: string[];
-  cards: PortfolioCard[];
+  headline?: string;
+  tags?: string[];
+  cards?: PortfolioCard[];
 };
 
 type CardWithKey = PortfolioCard & { _key: string };
@@ -52,7 +70,11 @@ type CardWithKey = PortfolioCard & { _key: string };
 // Main Component
 // ============================================
 
-export const HeroSection = ({ headline, tags, cards }: Props) => {
+export const HeroSection = ({
+  headline = DEFAULT_HEADLINE,
+  tags = DEFAULT_TAGS,
+  cards = DEFAULT_CARDS
+}: Props) => {
   // Refs
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -67,11 +89,9 @@ export const HeroSection = ({ headline, tags, cards }: Props) => {
   const marqueeText = useMemo(() => tags.join(" · "), [tags]);
   const itemWidth = cardWidth + GAP;
 
-  // 카드 데이터 준비 (props 또는 기본값 사용)
+  // 카드 데이터 준비
   const heroCards = useMemo<CardWithKey[]>(() => {
-    const baseCards = cards.length > 0 ? cards : DEFAULT_CARDS;
-
-    return baseCards.map((card, idx) => ({
+    return cards.map((card, idx) => ({
       ...card,
       image: card.image ?? CARD_IMAGES[card.title] ?? DEFAULT_IMAGE,
       _key: `hero-card-${idx}`,

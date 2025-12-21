@@ -4,26 +4,18 @@ import { LookingForTeamSection } from "@/components/sections/LookingForTeamSecti
 import { SharedCrafteryPathSection } from "@/components/sections/SharedCrafteryPathSection";
 import { TeamsSection } from "@/components/sections/TeamsSection";
 import { ValuesArrowFieldSection } from "@/components/sections/ValuesArrowFieldSection";
-import { getPortfolioModel } from "@/lib/figma/get_figma_data";
 
-export default async function Home() {
-  const model = await getPortfolioModel();
-
+export default function Home() {
   return (
     <>
       <SiteNav />
       <SmoothScrollProvider>
         <main className="flex min-h-screen flex-col gap-12 pt-16 pb-24">
-      <HeroSection headline={model.hero.headline} tags={model.hero.tags} cards={model.hero.cards} />
-      <TeamsSection headline={model.teamwork.headline} teams={model.teamwork.teams} />
-      <SharedCrafteryPathSection steps={model.craftery.steps} />
-      <ValuesArrowFieldSection title={model.offerings.title} items={model.offerings.items} />
-      <LookingForTeamSection
-        headline={model.cta.headline}
-        subheadline={model.cta.subheadline}
-        contactLabel={model.cta.contactLabel}
-        icons={model.cta.icons}
-      />
+          <HeroSection />
+          <TeamsSection />
+          <SharedCrafteryPathSection />
+          <ValuesArrowFieldSection />
+          <LookingForTeamSection />
         </main>
       </SmoothScrollProvider>
       <SiteFooter />
@@ -37,12 +29,12 @@ const SiteNav = () => {
       style={{
         background: "rgba(202, 202, 202, 0.2)",
       }}>
-      <a className="text-h4-em" href="/">Laura HJ Kim</a>
+      <a className="text-h4-em hover:text-primary transition-colors" href="/">Laura HJ Kim</a>
       <nav className="hidden items-center gap-6 text-h4-em md:flex">
-        <a href="#aboutme">About Me</a>
-        <a href="#works">Works</a>
-        <a href="#blog">Blog</a>
-        <a href="#resume">Resume</a>
+        <a href="#aboutme" className="hover:text-gray-600 transition-colors">About Me</a>
+        <a href="#works" className="hover:text-gray-600 transition-colors">Works</a>
+        <a href="#blog" className="hover:text-gray-600 transition-colors">Blog</a>
+        <a href="#resume" className="hover:text-gray-600 transition-colors">Resume</a>
       </nav>
     </header>
   );

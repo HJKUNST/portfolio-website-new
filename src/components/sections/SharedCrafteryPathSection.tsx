@@ -6,10 +6,20 @@ import { ScrollTrigger, getGSAP } from "@/lib/motion/gsap";
 import { prefersReducedMotion } from "@/lib/motion/constants";
 
 type Props = {
-  steps: string[];
+  steps?: string[];
 };
 
-export const SharedCrafteryPathSection = ({ steps }: Props) => {
+// ============================================
+// Default Data (기본 데이터)
+// ============================================
+
+const DEFAULT_STEPS = [
+  "I design with the mindset of shared craftery,",
+  "aiming for interfaces that hold together, convert cleanly,",
+  "and age well because the work underneath is honest.",
+];
+
+export const SharedCrafteryPathSection = ({ steps = DEFAULT_STEPS }: Props) => {
   const pathRef = useRef<SVGPathElement | null>(null);
   const containerRef = useRef<HTMLElement | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -32,7 +42,7 @@ export const SharedCrafteryPathSection = ({ steps }: Props) => {
       ease: "none",
       scrollTrigger: {
         trigger: containerRef.current,
-        start: "top top",       // 섹션 상단이 뷰포트 상단에 닿을 때 시작
+        start: "top 10%",       // 섹션 상단이 뷰포트 20% 지점에 닿을 때 시작 (더 일찍)
         end: "+=100%",          // 스크롤 100vh 동안 애니메이션 진행
         pin: true,              // 섹션을 고정
         pinSpacing: true,       // 고정 후 공간 확보
@@ -56,11 +66,19 @@ export const SharedCrafteryPathSection = ({ steps }: Props) => {
   return (
     <section
       ref={containerRef}
-      className="relative section-shell overflow-visible flex items-center justify-center"
+      className="relative section-shell overflow-visible flex flex-col items-center justify-center"
       style={{
-        background: "linear-gradient(to bottom, rgba(133,173,175,0) 0%, rgba(133,173,175,1) 40%, rgba(133,173,175,1) 60%, rgba(133,173,175,0) 100%)"
-      }}
-    >
+        background: "linear-gradient(to bottom, rgba(136,195,198,0) 0%, rgba(136,195,198,1) 40%, rgba(136,195,198,1) 60%, rgba(136,195,198,0) 100%)"
+      }}>
+      <p
+        className="text-h3-em mb-[48px] self-start"
+        style={{
+          background: "none",
+          WebkitBackgroundClip: "unset",
+          backgroundClip: "unset",
+          color: "white",
+        }}
+      >{`//  Vision that I take my work towards`}</p>
       <div className="absolute inset-0 opacity-75 flex items-center justify-center">
         <svg
           viewBox="0 0 910 793"
@@ -73,22 +91,30 @@ export const SharedCrafteryPathSection = ({ steps }: Props) => {
             d="M665.5 25C609.501 25 385 139.5 385 219C385 336.708 782.501 199.227 782.501 357.5C782.501 515.773 25 551.5 25 477.414C25 376 899 460.604 899 655.5C899 798 590.002 798 464.001 798"
             fill="none"
             stroke="rgba(231,243,244,1)"
-            strokeWidth={40}
+            strokeWidth={60}
             strokeLinecap="round"
           />
         </svg>
       </div>
 
-      <div className="relative grid gap-3 md:grid-cols-3">
+      <div className="relative grid md:grid-cols-3">
         {steps.map((line, idx) => (
           <div
             key={line}
-            className={clsx(
-              "card-surface bg-white/75 p-6 backdrop-blur transition-all duration-300",
-              idx === activeIndex ? "shadow-2xl" : "opacity-75",
-            )}
+            className={clsx("card-shell", idx === activeIndex && "active")}
           >
-            <p className="text-h2 text-left leading-snug">{line}</p>
+            <p
+              className="text-h2 text-left leading-snug"
+              style={{
+                color: 'white',
+              }}
+            >{line}</p>
+            <svg className="self-end" width="78" height="79" viewBox="0 0 78 79" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <line x1="75.9434" y1="39.3552" x2="5.79323e-05" y2="39.3552" stroke="white" stroke-width="2" />
+              <line x1="75.2363" y1="39.0623" x2="36.881" y2="0.707122" stroke="white" stroke-width="2" />
+              <line x1="76.6505" y1="39.0623" x2="38.2953" y2="77.4175" stroke="white" stroke-width="2" />
+            </svg>
+
           </div>
         ))}
       </div>

@@ -11,8 +11,8 @@ import { Dialog } from "../ui/Dialog";
 // ============================================
 
 type Props = {
-  headline: string;
-  teams: PortfolioTeam[];
+  headline?: string;
+  teams?: PortfolioTeam[];
 };
 
 type TeamCardProps = {
@@ -41,7 +41,7 @@ const SECTION_BACKGROUND = {
   width: "100%",          // 너비
   height: "80%",         // 높이
   // 중심 정렬 (카드 그리드 중심과 일치)
-  top: "60%",             // 상단 기준점
+  top: "50%",             // 상단 기준점
   left: "60%",            // 왼쪽 기준점  
   offsetX: "50px",        // X축 오프셋 (그리드 padding 보정: (120-20)/2 = 50px)
   offsetY: "0px",         // Y축 오프셋
@@ -80,38 +80,39 @@ const CARD_OVERLAY_STYLE = {
 // Default Data (기본 데이터)
 // ============================================
 
+const DEFAULT_HEADLINE = "Teams that I've made great outputs with — small teams working in rhythm.";
+
 const DEFAULT_TEAMS: PortfolioTeam[] = [
   {
     name: "EISEN Labs",
-    detail: "DeFi trading & hedging UI with live microinteractions.",
     image: "/1st.png",
     surfaces: ["DAPP"],
     industry: "DeFi",
-    description: "Eisen is a multichain DEX aggregator on 20+ chains, expanding with V2 to support both CEX and DEX trading, including spot and derivatives. \n Worked as a solo designer / marketer in the tech-focused defi startup, building every visual materials from zero to one including the dapp experience, landing page which had resulted product growth from $10K to $10M Daily.",
+    description: `Eisen is a multichain DEX aggregator on 20+ chains, expanding with V2 to support both CEX and DEX trading, including spot and derivatives.
+
+Worked as a solo designer / marketer in the tech-focused defi startup, building every visual materials from zero to one including the dapp experience, landing page which had resulted product growth from $10K to $10M Daily.`,
   },
   {
     name: "HODL Bot",
-    detail: "Brand & interaction patterns for bot experience.",
     image: "/2nd.png",
-    surfaces: ["Telegram Bot", "Brand Identity", "Marketing"],
-    industry: "Crypto Trading",
-    description: "Created the brand identity and interaction patterns for an automated trading bot, ensuring a seamless user experience across Telegram and web interfaces.",
+    surfaces: ["Telegram Bot"],
+    industry: "DeFi",
+    description: `A Telegram-based trading assistant built on Hyperliquid, designed to unify Spot, Perp, and EVM trading into a single delta-neutral strategy interface. The bot automates hedging and funding-fee arbitrage, helping users reduce downside risk while capturing extra yield — all within a simple chat-based UX.
+
+I led the UX and deck direction for the project, redesigning trading and balance flows to make multi-venue execution seamless. My work reduced task completion time by 43% and user errors by 35%, while improving overall clarity in the trading flow. I also organized and designed the full pitch deck narrative and visual system, which contributed to the team winning 3rd Place ($6K) at the Hyperliquid Hackathon.`,
   },
   {
-    name: "Product Summit",
-    detail: "Storytelling deck for trading interfaces.",
+    name: "TGIF : FX Hedge with Stablecoins",
     image: "/3rd.png",
-    surfaces: ["Pitch Deck", "Presentation", "Visual Design"],
-    industry: "FinTech",
-    description: "Designed compelling storytelling decks that communicate complex trading narratives, helping teams secure funding and partnerships.",
+    surfaces: ["DAPP"],
+    industry: "DeFi",
+    description: `TGIF is an FX hedging protocol built on a KRW-native stablecoin concept, developed by a technically strong team exploring how on-chain systems can replace slow, bank-centric currency risk management for merchants and enterprises.
+
+I led the product narrative and UX, structuring the entire deck and translating complex FX hedging logic into clear user flows. My work focused on making the protocol's mechanisms understandable, usable, and trustworthy, contributing to a 2nd Place ($12K) finish.`,
   },
   {
-    name: "Studio",
-    detail: "Design engineering + prototypes.",
+    name: "Be My Next Teammates!",
     image: "/4th.png",
-    surfaces: ["Prototypes", "Design Engineering", "R&D"],
-    industry: "Design Agency",
-    description: "A personal design studio focused on experimental prototypes and design engineering, pushing boundaries of what's possible in interface design.",
   },
 ];
 
@@ -214,15 +215,18 @@ const TeamDialog = ({
 // Main Component (메인 컴포넌트)
 // ============================================
 
-export const TeamsSection = ({ headline, teams }: Props) => {
-  // 팀 데이터 (props가 비어있으면 기본값 사용)
-  const cards = useMemo(() => (teams.length ? teams : DEFAULT_TEAMS), [teams]);
+export const TeamsSection = ({
+  headline = DEFAULT_HEADLINE,
+  teams = DEFAULT_TEAMS
+}: Props) => {
+  // 팀 데이터
+  const cards = useMemo(() => teams, [teams]);
 
   // 선택된 팀 상태 (다이얼로그용)
   const [selectedTeam, setSelectedTeam] = useState<PortfolioTeam | null>(null);
 
   return (
-    <section className="section-shell overflow-visible relative" style={{ paddingBottom: "0px" }}>
+    <section className="section-shell overflow-visible relative" style={{ paddingBottom: "0px", minHeight: "auto" }}>
       {/* 섹션 배경 그라데이션 */}
       <div
         className="absolute pointer-events-none"

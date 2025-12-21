@@ -5,17 +5,34 @@ import { ScrollTrigger, getGSAP } from "@/lib/motion/gsap";
 import { DEFAULT_EASE, MICRO_FAST, prefersReducedMotion } from "@/lib/motion/constants";
 
 type Props = {
-  headline: string;
-  subheadline: string;
-  contactLabel: string;
-  icons: { href: string; label: string; icon: string }[];
+  headline?: string;
+  subheadline?: string;
+  contactLabel?: string;
+  icons?: { href: string; label: string; icon: string }[];
 };
 
+// ============================================
+// Default Data (기본 데이터)
+// ============================================
+
+const DEFAULT_HEADLINE = "I'm looking for a team that builds in that cadence. I bring the machinery, the craft, and the ability to help many hands align toward one clear product.";
+
+const DEFAULT_SUBHEADLINE = "help many hands align toward one clear product.";
+
+const DEFAULT_CONTACT_LABEL = "Contact Me";
+
+const DEFAULT_ICONS = [
+  { href: "https://www.linkedin.com", label: "LinkedIn", icon: "in" },
+  { href: "https://github.com", label: "Github", icon: "gh" },
+  { href: "https://t.me", label: "Telegram", icon: "tg" },
+  { href: "mailto:hello@example.com", label: "Email", icon: "mail" },
+];
+
 export const LookingForTeamSection = ({
-  headline,
-  subheadline,
-  contactLabel,
-  icons,
+  headline = DEFAULT_HEADLINE,
+  subheadline = DEFAULT_SUBHEADLINE,
+  contactLabel = DEFAULT_CONTACT_LABEL,
+  icons = DEFAULT_ICONS,
 }: Props) => {
   const sectionRef = useRef<HTMLElement | null>(null);
   const lettersRef = useRef<HTMLSpanElement[]>([]);
