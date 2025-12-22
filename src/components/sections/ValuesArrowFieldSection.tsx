@@ -84,9 +84,9 @@ export const ValuesArrowFieldSection = ({
                 xmlns="http://www.w3.org/2000/svg"
                 aria-hidden
               >
-                <line x1="75.9434" y1="39.3552" x2="5.79323e-05" y2="39.3552" stroke="rgba(206,225,226,1)" strokeWidth="1" />
-                <line x1="75.2363" y1="39.0623" x2="36.881" y2="0.707122" stroke="rgba(206,225,226,1)" strokeWidth="1" />
-                <line x1="76.6505" y1="39.0623" x2="38.2953" y2="77.4175" stroke="rgba(206,225,226,1)" strokeWidth="1" />
+                <line x1="75.9434" y1="39.3552" x2="5.79323e-05" y2="39.3552" stroke="rgba(136,195,198,1)" strokeWidth="1" />
+                <line x1="75.2363" y1="39.0623" x2="36.881" y2="0.707122" stroke="rgba(136,195,198,1)" strokeWidth="1" />
+                <line x1="76.6505" y1="39.0623" x2="38.2953" y2="77.4175" stroke="rgba(136,195,198,1)" strokeWidth="1" />
               </svg>
             </div>
           );

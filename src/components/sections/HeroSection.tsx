@@ -18,14 +18,6 @@ const GAP = 2;
 const WHEEL_COOLDOWN_MS = 500;
 const ANIMATION_DURATION = 0.5;
 
-/** 카드 타이틀 → 이미지 경로 매핑 */
-const CARD_IMAGES: Record<string, string> = {
-  "EISEN Labs": "/eisen app.png",
-  "Graphic Design & Marketing": "/eisen graphic.png",
-  "Hyperliquid Portal": "/hodl.png",
-  "Hedging the FX Market": "/tgif.png",
-};
-
 const DEFAULT_IMAGE = "/tgif.png";
 
 // ============================================
@@ -44,14 +36,14 @@ const DEFAULT_TAGS = [
   "User Research",
   "Product Strategy",
   "Data Visualization",
-  "Analytics",
+  "Google Analytics",
 ];
 
 const DEFAULT_CARDS: PortfolioCard[] = [
-  { title: "EISEN Labs", subtitle: "Pump your profit potential" },
-  { title: "Graphic Design & Marketing", subtitle: "Works of Eisen" },
-  { title: "Hyperliquid Portal", subtitle: "No unified path to trade" },
-  { title: "Hedging the FX Market", subtitle: "KRW native stables to hedge FX risk" },
+  { title: "EISEN Finance", subtitle: "Onchain + CEX Trading Interface Made Clear", tags: ["UI/UX", "Design Engineering"], image: "/eisen app.png" },
+  { title: "Graphics, Data, Performance", subtitle: "Works of Eisen", tags: ["Graphic Design", "Brand Experience", "Performance Marketing", "Data Visualization"], image: "/eisen graphic.png" },
+  { title: "Korea Stablecoin Hackathon Winner: \n TGIF - Hedging the FX Market", subtitle: "KRW native stables to hedge FX risk", tags: ["UI", "Brand Experience", "Pitch Deck"], image: "/tgif.png" },
+  { title: "Hyperliquid Hackathon Winner: \n HODL Bot - Unified Trading Assistant", subtitle: "Telegram based delta-neutral trading bot", tags: ["User Experience", "Brand Experience", "Pitch Deck"], image: "/hodl.png" },
 ];
 
 // ============================================
@@ -93,7 +85,7 @@ export const HeroSection = ({
   const heroCards = useMemo<CardWithKey[]>(() => {
     return cards.map((card, idx) => ({
       ...card,
-      image: card.image ?? CARD_IMAGES[card.title] ?? DEFAULT_IMAGE,
+      image: card.image ?? DEFAULT_IMAGE,
       _key: `hero-card-${idx}`,
     }));
   }, [cards]);
@@ -284,7 +276,7 @@ const CarouselNav = ({
   isAtStart: boolean;
   isAtEnd: boolean;
 }) => {
-  const buttonBase = "flex items-center gap-2 px-4 py-2 rounded-full transition";
+  const buttonBase = "flex items-center gap-2 px-4 py-2 rounded-2xl transition";
   const buttonActive = "bg-gray-100 hover:bg-gray-200";
   const buttonDisabled = "bg-gray-50 text-gray-300 cursor-not-allowed";
 
@@ -313,19 +305,57 @@ const CarouselNav = ({
 /** 히어로 카드 */
 const HeroCard = ({ card }: { card: CardWithKey }) => (
   <div
-    className="relative flex-none overflow-hidden rounded-lg h-full"
+    className="group relative flex-none overflow-hidden rounded-2xl h-full cursor-pointer"
     style={{ aspectRatio: "4 / 3" }}
   >
     {card.image ? (
-      <Image
-        src={card.image}
-        alt={card.title}
-        fill
-        className="object-cover"
-        priority
-        quality={75}
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-      />
+      <>
+        <Image
+          src={card.image}
+          alt={card.title}
+          fill
+          className="object-cover transition-all duration-300"
+          priority
+          quality={75}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+        />
+        {/* Hover overlay with blur and info */}
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-[4px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-6 ">
+          {/* Tags - 우상단 */}
+          {card.tags && card.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1 justify-end transform -translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+              {card.tags.map((tag, idx) => (
+                <span
+                  key={idx}
+                  className="px-4 py-2 rounded-2xl text-body overflow-hidden"
+                  style={{
+                    color: "white",
+                    boxShadow: "inset 0 4px 20px 0 rgba(210,210,210,0.25)",
+                    borderRadius: "1rem"
+                  }}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+          {/* Title & Subtitle - 하단 */}
+          <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+            <h3
+              className="text-white text-h2 font-semibold whitespace-pre-line"
+              style={{
+                color: 'white',
+
+              }}
+            >{card.title}</h3>
+            {card.subtitle && (
+              <p className={styles.marqueeText} style={{ color: "rgba(255, 255, 255, 0.6)" }}>
+                {card.subtitle}
+              </p>
+            )}
+          </div>
+        </div>
+      </>
     ) : (
       <div className="absolute inset-0 bg-gray-200" />
     )}

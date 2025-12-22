@@ -24,6 +24,7 @@ export type PortfolioCard = {
   subtitle?: string;
   image?: string;
   pill?: string;
+  tags?: string[];
 };
 
 export type PortfolioTeam = {

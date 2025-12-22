@@ -23,10 +23,10 @@ const DEFAULT_SUBHEADLINE = "to help many hands align toward one clear product."
 const DEFAULT_CONTACT_LABEL = "Contact Me";
 
 const DEFAULT_ICONS = [
-  { href: "https://www.linkedin.com", label: "LinkedIn", icon: "/linkedin.svg" },
-  { href: "https://github.com", label: "Github", icon: "/github.svg" },
-  { href: "https://t.me", label: "Telegram", icon: "/telegram.svg" },
-  { href: "mailto:hello@example.com", label: "Email", icon: "/mail.svg" },
+  { href: "https://www.linkedin.com/in/laura-hj-kim-a761b8223/", label: "LinkedIn", icon: "/linkedin.svg" },
+  { href: "https://github.com/HJKUNST", label: "Github", icon: "/github.svg" },
+  { href: "https://t.me/lkkunst1", label: "Telegram", icon: "/telegram.svg" },
+  { href: "mailto:lkkunst1@gmail.com", label: "Email", icon: "/mail.svg" },
 ];
 
 export const LookingForTeamSection = ({
