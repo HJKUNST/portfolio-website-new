@@ -86,11 +86,25 @@ export const SharedCrafteryPathSection = ({ steps = DEFAULT_STEPS }: Props) => {
           className="w-full h-full min-w-[900px]"
           style={{ transform: "scale(1.1)", transformOrigin: "center center" }}
         >
+          <defs>
+            <linearGradient
+              id="pathStrokeGradient"
+              gradientUnits="userSpaceOnUse"
+              x1="665.5"
+              y1="25"
+              x2="464.001"
+              y2="798"
+            >
+              <stop offset="0%" stopColor="rgba(231,243,244,0)" />
+              <stop offset="50%" stopColor="rgba(231,243,244,1)" />
+              <stop offset="100%" stopColor="rgba(231,243,244,0)" />
+            </linearGradient>
+          </defs>
           <path
             ref={pathRef}
             d="M665.5 25C609.501 25 385 139.5 385 219C385 336.708 782.501 199.227 782.501 357.5C782.501 515.773 25 551.5 25 477.414C25 376 899 460.604 899 655.5C899 798 590.002 798 464.001 798"
             fill="none"
-            stroke="rgba(231,243,244,1)"
+            stroke="url(#pathStrokeGradient)"
             strokeWidth={60}
             strokeLinecap="round"
           />
@@ -104,12 +118,12 @@ export const SharedCrafteryPathSection = ({ steps = DEFAULT_STEPS }: Props) => {
             className={clsx("card-shell", idx === activeIndex && "active")}
           >
             <p
-              className="text-h2 text-left leading-snug"
+              className="text-h2 text-left leading-snug min-h-[240px]"
               style={{
                 color: 'white',
               }}
             >{line}</p>
-            <svg className="self-end" width="78" height="79" viewBox="0 0 78 79" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg className="self-end absolute bottom-8 right-8" width="78" height="79" viewBox="0 0 78 79" fill="none" xmlns="http://www.w3.org/2000/svg">
               <line x1="75.9434" y1="39.3552" x2="5.79323e-05" y2="39.3552" stroke="white" stroke-width="2" />
               <line x1="75.2363" y1="39.0623" x2="36.881" y2="0.707122" stroke="white" stroke-width="2" />
               <line x1="76.6505" y1="39.0623" x2="38.2953" y2="77.4175" stroke="white" stroke-width="2" />
@@ -121,4 +135,3 @@ export const SharedCrafteryPathSection = ({ steps = DEFAULT_STEPS }: Props) => {
     </section>
   );
 };
-
