@@ -109,6 +109,15 @@ img {
   color: var(--gray-900);
 }
 
+/* Gradient text utility for LoadingScreen ScrambleText */
+.text-gradient-loading {
+  background: var(--main-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
 .text-em {
   font-family: var(--font-manrope), "Manrope", sans-serif;
   font-size: var(--em-size);

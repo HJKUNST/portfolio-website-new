@@ -18,8 +18,6 @@ const GAP = 2;
 const WHEEL_COOLDOWN_MS = 500;
 const ANIMATION_DURATION = 0.5;
 
-const DEFAULT_IMAGE = "/tgif.png";
-
 // ============================================
 // Default Data (기본 데이터)
 // ============================================
@@ -85,7 +83,8 @@ export const HeroSection = ({
   const heroCards = useMemo<CardWithKey[]>(() => {
     return cards.map((card, idx) => ({
       ...card,
-      image: card.image ?? DEFAULT_IMAGE,
+      // image가 없으면 undefined로 설정 (빈 div 렌더링)
+      image: card.image || undefined,
       _key: `hero-card-${idx}`,
     }));
   }, [cards]);
@@ -358,7 +357,7 @@ const HeroCard = ({ card }: { card: CardWithKey }) => (
         </div>
       </>
     ) : (
-      <div className="absolute inset-0 bg-gray-200" />
+      <div className="absolute inset-0 hero-card-empty" />
     )}
     {/* Inset shadow overlay - 이미지 위에 항상 표시 */}
     <div

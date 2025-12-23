@@ -32,3 +32,12 @@
     transform: translateX(-20%);
   }
 }
+
+/* 빈 카드 스타일 - 커스터마이징 가능 */
+.hero-card-empty {
+  /* 기본 스타일: 투명 배경 */
+  background-color: rgba(206, 225, 226, 0.1);
+  border-radius: 20px;
+  backdrop-filter: blur(4px);
+  box-shadow: inset 0 0 50px 0 #85adaf;
+}
