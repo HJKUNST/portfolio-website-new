@@ -81,7 +81,7 @@ export const ValuesArrowFieldSection = ({
   }, [items]);
 
   return (
-    <section className="section-shell">
+    <section className="section-shell" style={{ marginBottom: "none" }}>
       <p
         className="text-h3-em mb-[48px]"
         style={{

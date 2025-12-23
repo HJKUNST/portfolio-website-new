@@ -212,3 +212,8 @@ img {
     scroll-behavior: auto !important;
   }
 }
+
+::selection {
+  background: var(--primary-bright);
+  color: var(--gray-900);
+}

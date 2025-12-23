@@ -10,7 +10,7 @@ export default function Home() {
     <>
       <SiteNav />
       <SmoothScrollProvider>
-        <main className="flex min-h-screen flex-col gap-12 pt-16 pb-24">
+        <main className="flex min-h-screen flex-col gap-12 pt-16 relative">
           <HeroSection />
           <TeamsSection />
           <SharedCrafteryPathSection />

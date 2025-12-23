@@ -44,6 +44,13 @@ export const LookingForTeamSection = ({
   const headlineLength = headline.length;
   const allLetters = useMemo(() => fullText.split(""), [fullText]);
 
+  // Split into words for word-level line breaking
+  const words = useMemo(() => {
+    const headlineWords = headline.split(" ");
+    const subheadlineWords = subheadline.split(" ");
+    return { headlineWords, subheadlineWords };
+  }, [headline, subheadline]);
+
   // useEffect(() => {
   //   const gsap = getGSAP();
   //   if (!gsap || !ScrollTrigger || prefersReducedMotion()) return;
@@ -76,57 +83,80 @@ export const LookingForTeamSection = ({
   // }, []);
 
   return (
-    <section ref={sectionRef} className="section-shell" style={{ minHeight: "40vh" }}>
-      <p className="my-6 text-h2 text-gray-900 leading-snug w-[50%] pb-[8%]">
-        {allLetters.map((letter, idx) => {
-          const isSpace = letter === " ";
-          const isSubheadline = idx >= headlineLength;
-          return (
-            <span
-              key={`letter-${letter}-${idx}`}
-              ref={(el) => {
-                if (el && !isSpace && !isSubheadline) {
-                  const headlineIdx = idx;
-                  lettersRef.current[headlineIdx] = el;
-                }
-              }}
-              className={clsx(
-                isSpace ? "" : "inline-block",
-                isSubheadline && "text-h2-em text-secondary align-baseline"
-              )}
-              style={isSubheadline ? { lineHeight: 0.9 } : undefined}
-            >
-              {isSpace ? "\u00A0" : letter}
+    <section ref={sectionRef} className="section-shell flex flex-col items-center justify-center relative overflow-auto" style={{ minHeight: "10vh", background: "transparent", paddingBottom: "6rem" }}>
+      <div className="my-6 pb-[8%] flex flex-col items-center">
+        <p className="text-h2 text-gray-900 leading-snug w-[70%] mb-8 text-center">
+          {words.headlineWords.map((word, wordIdx) => (
+            <span key={`headline-word-${wordIdx}`} className="inline-block">
+              {word.split("").map((letter, letterIdx) => {
+                const globalIdx = words.headlineWords.slice(0, wordIdx).join(" ").length + wordIdx + letterIdx;
+                return (
+                  <span
+                    key={`headline-letter-${wordIdx}-${letterIdx}`}
+                    ref={(el) => {
+                      if (el) {
+                        lettersRef.current[globalIdx] = el;
+                      }
+                    }}
+                    className="inline-block"
+                  >
+                    {letter}
+                  </span>
+                );
+              })}
+              {wordIdx < words.headlineWords.length - 1 && "\u00A0"}
             </span>
-          );
-        })}
-      </p>
-
-      <div ref={ctaRef} className="mt-8 flex flex-col items-center gap-4">
-        <span className="text-em uppercase tracking-[0.08em] text-gray-300">
-          {contactLabel}
-        </span>
-        <div className="flex items-center gap-1">
-          {icons.map((icon) => (
-            <a
-              key={icon.href}
-              href={icon.href}
-              target="_blank"
-              rel="noreferrer"
-              className="flex h-16 w-16 items-center justify-center rounded-full border border-gray-100 bg-[rgba(206,225,226,0.2)] text-gray-900 transition hover:-translate-y-1"
-              aria-label={icon.label}
-            >
-              <Image
-                src={icon.icon}
-                alt={icon.label}
-                width={24}
-                height={24}
-                className="object-contain"
-              />
-            </a>
           ))}
+          {" "}
+          {words.subheadlineWords.map((word, wordIdx) => (
+            <span key={`subheadline-word-${wordIdx}`} className="inline-block text-h2-em text-secondary align-baseline" style={{ lineHeight: 0.9 }}>
+              {word.split("").map((letter, letterIdx) => (
+                <span
+                  key={`subheadline-letter-${wordIdx}-${letterIdx}`}
+                  className="inline-block"
+                >
+                  {letter}
+                </span>
+              ))}
+              {wordIdx < words.subheadlineWords.length - 1 && "\u00A0"}
+            </span>
+          ))}
+        </p>
+
+        <div ref={ctaRef} className="flex flex-col items-center gap-4">
+          <span className="text-h4 uppercase tracking-[0.08em]">
+            {contactLabel}
+          </span>
+          <div className="flex flex-wrap gap-1">
+            {icons.map((icon) => (
+              <a
+                key={icon.href}
+                href={icon.href}
+                target="_blank"
+                rel="noreferrer"
+                className="flex h-16 w-16 items-center justify-center rounded-full border border-gray-100 bg-[rgba(206,225,226,0.2)] text-gray-900 transition hover:-translate-y-1"
+                aria-label={icon.label}
+              >
+                <Image
+                  src={icon.icon}
+                  alt={icon.label}
+                  width={24}
+                  height={24}
+                  className="object-contain"
+                />
+              </a>
+            ))}
+          </div>
         </div>
       </div>
+      <div
+        className="absolute bottom-0 left-0 right-0 h-[500px] pointer-events-none -z-10"
+        style={{
+          background: 'radial-gradient(ellipse 1200px 500px at 50% 100%, rgba(136,195,198,0.4) 0%, rgba(136,195,198,0) 100%)',
+          maskImage: 'linear-gradient(to top, black 0%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to top, black 0%, transparent 100%)'
+        }}
+      />
     </section>
   );
 };
