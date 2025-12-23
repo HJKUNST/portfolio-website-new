@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Allow serving local SVGs through next/image (used for social icons)
+  images: {
+    dangerouslyAllowSVG: true,
+    contentDispositionType: "inline",
+  },
 };
 
 export default nextConfig;

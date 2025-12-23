@@ -130,6 +130,7 @@ const TeamCard = ({ team, index, onClick }: TeamCardProps) => {
 
   return (
     <motion.button
+      type="button"
       onClick={onClick}
       className="group relative w-full aspect-square overflow-visible rounded-3xl text-left shadow-lg"
       style={{ zIndex }}
@@ -271,7 +272,7 @@ export const TeamsSection = ({
         }}
       >{`// Teams that I've made great outputs with`}</p>
       <p
-        className="my-6 text-h2 text-gray-900 leading-snug w-[50%] pb-[8%]"
+        className="my-6 text-h2 text-gray-900 leading-snug w-[50%] pb-[8%] relative z-0"
       >
         I believe the strongest products are built through{" "}
         <span className="text-h2-em text-secondary align-baseline" style={{ lineHeight: 0.9 }}>shared craft</span>

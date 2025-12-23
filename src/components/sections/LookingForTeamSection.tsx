@@ -47,7 +47,7 @@ export const LookingForTeamSection = ({
   // useEffect(() => {
   //   const gsap = getGSAP();
   //   if (!gsap || !ScrollTrigger || prefersReducedMotion()) return;
-  //   if (!sectionRef.current) return;
+  //   if (!sectionRef.current) return;f
 
   //   const tl = gsap.timeline({
   //     scrollTrigger: {

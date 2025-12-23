@@ -21,6 +21,10 @@ export const CustomCursor = ({
   hoverIcon,
   selectorIcons,
 }: CustomCursorProps) => {
+  // 더 큰 캔버스에 그리고 축소해두면 확대 시에도 깨짐이 줄어듭니다.
+  const BASE_CURSOR_SIZE = 128;
+  const DISPLAY_CURSOR_SIZE = 12;
+  const SCALE_DOWN = DISPLAY_CURSOR_SIZE / BASE_CURSOR_SIZE;
   const cursorRef = useRef<HTMLDivElement | null>(null);
   const [cursorColor, setCursorColor] = useState("rgba(141, 195, 198, 1)");
 
@@ -197,18 +201,32 @@ export const CustomCursor = ({
     <div
       ref={cursorRef}
       className="fixed top-0 left-0 pointer-events-none z-[9999] mix-blend-difference"
-      style={{ willChange: "transform" }}
+      style={{ willChange: "transform", transform: "translate3d(0,0,0)" }}
     >
-      <div className="relative w-[12px] h-[12px]">
+      <div
+        className="relative"
+        style={{
+          width: BASE_CURSOR_SIZE,
+          height: BASE_CURSOR_SIZE,
+          transform: `scale(${SCALE_DOWN}) translateZ(0)`,
+          transformOrigin: "center",
+        }}
+      >
         <svg
-          width="12"
-          height="12"
-          viewBox="0 0 10 10"
+          width={BASE_CURSOR_SIZE}
+          height={BASE_CURSOR_SIZE}
+          viewBox={`0 0 ${BASE_CURSOR_SIZE} ${BASE_CURSOR_SIZE}`}
+          shapeRendering="geometricPrecision"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           style={{ display: "block" }}
         >
-          <circle cx="5" cy="5" r="5" fill={cursorColor} />
+          <circle
+            cx={BASE_CURSOR_SIZE / 2}
+            cy={BASE_CURSOR_SIZE / 2}
+            r={BASE_CURSOR_SIZE / 2}
+            fill={cursorColor}
+          />
         </svg>
       </div>
     </div>

@@ -100,6 +100,7 @@ export const ValuesArrowFieldSection = ({
         {items.map((item, idx) => {
           const isFirstRow = idx < 3;
           const isFirstCol = idx % 3 === 0;
+          const isMoreComingSoon = item === "More Coming Soon…";
 
           return (
             <div
@@ -108,21 +109,32 @@ export const ValuesArrowFieldSection = ({
                 cardsRef.current[idx] = el;
               }}
               className={clsx(
-                "relative flex flex-col justify-between bg-white/90 px-6 py-6 gap-8",
-                "transition-colors duration-200 hover:bg-white",
+                "relative flex flex-col justify-between bg-white/10 px-6 py-6 gap-8",
+                !isMoreComingSoon && "group",
+                !isMoreComingSoon && "hover:[box-shadow:inset_0_0_40px_0_rgba(136,195,198,0.2)]",
+                !isMoreComingSoon && "transition-all duration-200 ease-in-out",
                 !isFirstRow && "border-t border-[rgba(206,225,226,1)]",
                 !isFirstCol && "border-l border-[rgba(206,225,226,1)]",
+
               )}
               style={{ minHeight: "180px" }}
             >
               <p
-                className={clsx("text-h2 text-left leading-snug", item === "More Coming Soon…" && "opacity-20")}
-                style={{ color: "rgba(0,0,0,0.8)" }}
+                className={clsx(
+                  "values-card-text text-h2 text-left leading-snug",
+                  "text-[rgba(0,0,0,0.8)]",
+                  !isMoreComingSoon && "transition-colors duration-200 ease-in-out",
+                  isMoreComingSoon && "opacity-20"
+                )}
               >
                 {item}
               </p>
               <svg
-                className="arrow-pointer self-end"
+                className={clsx(
+                  "arrow-pointer self-end text-[rgba(133,173,175,1)]",
+                  !isMoreComingSoon && "group-hover:!text-[var(--secondary)]",
+                  !isMoreComingSoon && "transition-colors duration-200 ease-in-out"
+                )}
                 width="78"
                 height="79"
                 viewBox="0 0 78 79"
@@ -130,9 +142,9 @@ export const ValuesArrowFieldSection = ({
                 xmlns="http://www.w3.org/2000/svg"
                 aria-hidden
               >
-                <line x1="75.9434" y1="39.3552" x2="5.79323e-05" y2="39.3552" stroke="rgba(133,173,175,1)" strokeWidth="1" />
-                <line x1="75.2363" y1="39.0623" x2="36.881" y2="0.707122" stroke="rgba(133,173,175,1)" strokeWidth="1" />
-                <line x1="76.6505" y1="39.0623" x2="38.2953" y2="77.4175" stroke="rgba(133,173,175,1)" strokeWidth="1" />
+                <line x1="75.9434" y1="39.3552" x2="5.79323e-05" y2="39.3552" stroke="currentColor" strokeWidth="1" />
+                <line x1="75.2363" y1="39.0623" x2="36.881" y2="0.707122" stroke="currentColor" strokeWidth="1" />
+                <line x1="76.6505" y1="39.0623" x2="38.2953" y2="77.4175" stroke="currentColor" strokeWidth="1" />
               </svg>
             </div>
           );
