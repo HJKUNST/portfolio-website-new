@@ -12,11 +12,11 @@ export const LoadingScreen = () => {
   useEffect(() => {
     // 최소 로딩 시간 (ms)
     const minLoadingTime = 1500;
-    
+
     // 페이지 로드 완료 확인
-    const checkPageLoaded = () => {
+    const checkPageLoaded = (): Promise<boolean> => {
       if (document.readyState === "complete") {
-        return true;
+        return Promise.resolve(true);
       }
       return new Promise<boolean>((resolve) => {
         window.addEventListener("load", () => resolve(true), { once: true });
@@ -28,7 +28,7 @@ export const LoadingScreen = () => {
     // 진행률 애니메이션
     const gsap = getGSAP();
     let progressTween: gsap.core.Tween | null = null;
-    
+
     if (gsap && !prefersReducedMotion()) {
       const progressObj = { value: 0 };
       progressTween = gsap.to(progressObj, {
@@ -59,7 +59,7 @@ export const LoadingScreen = () => {
     ]).then(() => {
       // 페이드 아웃 시작
       setIsVisible(false);
-      
+
       // 페이드 아웃 완료 후 DOM에서 제거
       setTimeout(() => {
         setIsLoading(false);
