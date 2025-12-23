@@ -90,7 +90,7 @@ const DEFAULT_TEAMS: PortfolioTeam[] = [
     industry: "DeFi",
     description: `Eisen is a multichain DEX aggregator on 20+ chains, expanding with V2 to support both CEX and DEX trading, including spot and derivatives.
 
-Worked as a solo designer / marketer in the tech-focused defi startup, building every visual materials from zero to one including the dapp experience, landing page which had resulted product growth from $10K to $10M Daily.`,
+    Worked as a solo designer / marketer in the tech-focused defi startup, building every visual materials from zero to one including the dapp experience, landing page which had resulted product growth from $10K to $10M Daily.`,
   },
   {
     name: "HODL Bot",
@@ -99,7 +99,7 @@ Worked as a solo designer / marketer in the tech-focused defi startup, building 
     industry: "DeFi",
     description: `A Telegram-based trading assistant built on Hyperliquid, designed to unify Spot, Perp, and EVM trading into a single delta-neutral strategy interface. The bot automates hedging and funding-fee arbitrage, helping users reduce downside risk while capturing extra yield — all within a simple chat-based UX.
 
-I led the UX and deck direction for the project, redesigning trading and balance flows to make multi-venue execution seamless. My work reduced task completion time by 43% and user errors by 35%, while improving overall clarity in the trading flow. I also organized and designed the full pitch deck narrative and visual system, which contributed to the team winning 3rd Place ($6K) at the Hyperliquid Hackathon.`,
+    I led the UX and deck direction for the project, redesigning trading and balance flows to make multi-venue execution seamless. My work reduced task completion time by 43% and user errors by 35%, while improving overall clarity in the trading flow. I also organized and designed the full pitch deck narrative and visual system, which contributed to the team winning 3rd Place ($6K) at the Hyperliquid Hackathon.`,
   },
   {
     name: "TGIF : FX Hedge with Stablecoins",
@@ -108,7 +108,7 @@ I led the UX and deck direction for the project, redesigning trading and balance
     industry: "DeFi",
     description: `TGIF is an FX hedging protocol built on a KRW-native stablecoin concept, developed by a technically strong team exploring how on-chain systems can replace slow, bank-centric currency risk management for merchants and enterprises.
 
-I led the product narrative and UX, structuring the entire deck and translating complex FX hedging logic into clear user flows. My work focused on making the protocol's mechanisms understandable, usable, and trustworthy, contributing to a 2nd Place ($12K) finish.`,
+    I led the product narrative and UX, structuring the entire deck and translating complex FX hedging logic into clear user flows. My work focused on making the protocol's mechanisms understandable, usable, and trustworthy, contributing to a 2nd Place ($12K) finish.`,
   },
   {
     name: "Be My Next Teammates!",
@@ -126,15 +126,18 @@ const TeamCard = ({ team, index, onClick }: TeamCardProps) => {
   const hoverAnimation = CARD_HOVER_ANIMATIONS[index % 4];
   // z-index: 첫 번째 카드가 가장 위에 오도록 (index 0 → z-index 10, index 1 → z-index 9, ...)
   const zIndex = 10 - index;
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <motion.button
       onClick={onClick}
-      className="relative w-full aspect-square overflow-hidden rounded-3xl text-left shadow-lg"
+      className="group relative w-full aspect-square overflow-visible rounded-3xl text-left shadow-lg"
       style={{ zIndex }}
       initial={initialState}
       whileHover={hoverAnimation}
       transition={CARD_TRANSITION}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {team.image ? (
         <>
@@ -142,17 +145,33 @@ const TeamCard = ({ team, index, onClick }: TeamCardProps) => {
             src={team.image}
             alt={team.name}
             fill
-            className="object-cover"
+            className="object-cover rounded-3xl"
             priority
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           />
           {/* 이미지 오버레이 (inset shadow + border) */}
-          <div className="absolute inset-0" style={CARD_OVERLAY_STYLE} />
+          <div className="absolute inset-0 rounded-3xl" style={CARD_OVERLAY_STYLE} />
         </>
       ) : (
         /* 이미지 없을 때 플레이스홀더 */
-        <div className="absolute inset-0 bg-[rgba(206,225,226,0.2)] backdrop-blur-md border-[rgb(206,225,226)] border-1" />
+        <div className="absolute inset-0 bg-[rgba(206,225,226,0.2)] backdrop-blur-md border-[rgb(206,225,226)] border-1 rounded-3xl" />
       )}
+
+      {/* Tooltip */}
+      <AnimatePresence>
+        {isHovered && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 px-4 py-2 bg-[rgba(136,195,198,0.6)] backdrop-blur-md rounded-full text-white box-shadow-[inset_0_4px_20px_0_rgba(57,107,110,0.8)] text-body whitespace-nowrap pointer-events-none z-50"
+            style={{ color: "white" }}
+          >
+            {team.name}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.button>
   );
 };

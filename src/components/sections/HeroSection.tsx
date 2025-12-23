@@ -305,7 +305,8 @@ const CarouselNav = ({
 /** 히어로 카드 */
 const HeroCard = ({ card }: { card: CardWithKey }) => (
   <div
-    className="group relative flex-none overflow-hidden rounded-2xl h-full cursor-pointer"
+    className="group relative flex-none overflow-hidden rounded-2xl h-full cursor-pointer hero-card"
+    data-cursor-hover
     style={{ aspectRatio: "4 / 3" }}
   >
     {card.image ? (

@@ -10,7 +10,7 @@ type Props = {
 };
 
 // ============================================
-// Default Data (기본 데이터)
+// Default Data
 // ============================================
 
 const DEFAULT_TITLE = "Things that I can add values for you";
@@ -32,6 +32,43 @@ export const ValuesArrowFieldSection = ({
   items = DEFAULT_ITEMS
 }: Props) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const updateCardHeights = () => {
+      const cards = cardsRef.current.filter(Boolean) as HTMLDivElement[];
+      if (cards.length === 0) return;
+
+      cards.forEach(card => {
+        card.style.height = 'auto';
+      });
+
+      let maxHeight = 0;
+      cards.forEach(card => {
+        const height = card.getBoundingClientRect().height;
+        if (height > maxHeight) {
+          maxHeight = height;
+        }
+      });
+
+      cards.forEach(card => {
+        card.style.height = `${maxHeight}px`;
+      });
+    };
+
+    updateCardHeights();
+
+    const resizeObserver = new ResizeObserver(updateCardHeights);
+    cardsRef.current.forEach(card => {
+      if (card) resizeObserver.observe(card);
+    });
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [items]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -58,7 +95,7 @@ export const ValuesArrowFieldSection = ({
       </p>
       <div
         ref={containerRef}
-        className="grid overflow-hidden sm:grid-cols-3 border-y border-[rgba(206,225,226,1)]"
+        className="grid overflow-hidden sm:grid-cols-3 border-y border-[rgba(206,225,226,1)] items-stretch"
       >
         {items.map((item, idx) => {
           const isFirstRow = idx < 3;
@@ -67,14 +104,23 @@ export const ValuesArrowFieldSection = ({
           return (
             <div
               key={item}
+              ref={(el) => {
+                cardsRef.current[idx] = el;
+              }}
               className={clsx(
-                "relative flex flex-col justify-between bg-white/90 min-h-[180px] px-6 py-6 gap-8",
+                "relative flex flex-col justify-between bg-white/90 px-6 py-6 gap-8",
                 "transition-colors duration-200 hover:bg-white",
                 !isFirstRow && "border-t border-[rgba(206,225,226,1)]",
                 !isFirstCol && "border-l border-[rgba(206,225,226,1)]",
               )}
+              style={{ minHeight: "180px" }}
             >
-              <p className="text-h2 text-left leading-snug" style={{ color: "rgba(0,0,0,0.8)" }}>{item}</p>
+              <p
+                className={clsx("text-h2 text-left leading-snug", item === "More Coming Soon…" && "opacity-20")}
+                style={{ color: "rgba(0,0,0,0.8)" }}
+              >
+                {item}
+              </p>
               <svg
                 className="arrow-pointer self-end"
                 width="78"
@@ -84,9 +130,9 @@ export const ValuesArrowFieldSection = ({
                 xmlns="http://www.w3.org/2000/svg"
                 aria-hidden
               >
-                <line x1="75.9434" y1="39.3552" x2="5.79323e-05" y2="39.3552" stroke="rgba(136,195,198,1)" strokeWidth="1" />
-                <line x1="75.2363" y1="39.0623" x2="36.881" y2="0.707122" stroke="rgba(136,195,198,1)" strokeWidth="1" />
-                <line x1="76.6505" y1="39.0623" x2="38.2953" y2="77.4175" stroke="rgba(136,195,198,1)" strokeWidth="1" />
+                <line x1="75.9434" y1="39.3552" x2="5.79323e-05" y2="39.3552" stroke="rgba(133,173,175,1)" strokeWidth="1" />
+                <line x1="75.2363" y1="39.0623" x2="36.881" y2="0.707122" stroke="rgba(133,173,175,1)" strokeWidth="1" />
+                <line x1="76.6505" y1="39.0623" x2="38.2953" y2="77.4175" stroke="rgba(133,173,175,1)" strokeWidth="1" />
               </svg>
             </div>
           );

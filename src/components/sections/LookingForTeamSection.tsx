@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useRef } from "react";
+import clsx from "clsx";
 import { ScrollTrigger, getGSAP } from "@/lib/motion/gsap";
 import { DEFAULT_EASE, MICRO_FAST, prefersReducedMotion } from "@/lib/motion/constants";
 
@@ -39,7 +40,9 @@ export const LookingForTeamSection = ({
   const lettersRef = useRef<HTMLSpanElement[]>([]);
   const ctaRef = useRef<HTMLDivElement | null>(null);
 
-  const headlineLetters = useMemo(() => headline.split(""), [headline]);
+  const fullText = useMemo(() => `${headline} ${subheadline}`, [headline, subheadline]);
+  const headlineLength = headline.length;
+  const allLetters = useMemo(() => fullText.split(""), [fullText]);
 
   // useEffect(() => {
   //   const gsap = getGSAP();
@@ -73,24 +76,31 @@ export const LookingForTeamSection = ({
   // }, []);
 
   return (
-    <section ref={sectionRef} className="section-shell text-center" style={{ minHeight: "40vh" }}>
-      <h3 className="text-h2 max-w-5xl mx-auto leading-tight">
-        {headlineLetters.map((letter, idx) => {
+    <section ref={sectionRef} className="section-shell" style={{ minHeight: "40vh" }}>
+      <p className="my-6 text-h2 text-gray-900 leading-snug w-[50%] pb-[8%]">
+        {allLetters.map((letter, idx) => {
           const isSpace = letter === " ";
+          const isSubheadline = idx >= headlineLength;
           return (
             <span
-              key={`${letter}-${idx}`}
+              key={`letter-${letter}-${idx}`}
               ref={(el) => {
-                if (el && !isSpace) lettersRef.current[idx] = el;
+                if (el && !isSpace && !isSubheadline) {
+                  const headlineIdx = idx;
+                  lettersRef.current[headlineIdx] = el;
+                }
               }}
-              className={isSpace ? "" : "inline-block"}
+              className={clsx(
+                isSpace ? "" : "inline-block",
+                isSubheadline && "text-h2-em text-secondary align-baseline"
+              )}
+              style={isSubheadline ? { lineHeight: 0.9 } : undefined}
             >
               {isSpace ? "\u00A0" : letter}
             </span>
           );
         })}
-      </h3>
-      <p className="mt-4 text-h2-em text-secondary">{subheadline}</p>
+      </p>
 
       <div ref={ctaRef} className="mt-8 flex flex-col items-center gap-4">
         <span className="text-em uppercase tracking-[0.08em] text-gray-300">

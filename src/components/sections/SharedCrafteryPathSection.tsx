@@ -22,6 +22,9 @@ const DEFAULT_STEPS = [
 export const SharedCrafteryPathSection = ({ steps = DEFAULT_STEPS }: Props) => {
   const pathRef = useRef<SVGPathElement | null>(null);
   const containerRef = useRef<HTMLElement | null>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
+  const isManualScrollRef = useRef(false);
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
@@ -48,20 +51,89 @@ export const SharedCrafteryPathSection = ({ steps = DEFAULT_STEPS }: Props) => {
         pinSpacing: true,       // 고정 후 공간 확보
         scrub: 1,               // 스크롤과 부드럽게 동기화 (1초 딜레이)
         onUpdate: (self) => {
+          // 수동 스크롤 중이면 업데이트하지 않음
+          if (isManualScrollRef.current) return;
+
           // 카드 활성화 상태 업데이트
           const progress = self.progress;
-          if (progress < 0.3) setActiveIndex(0);
-          else if (progress < 0.6) setActiveIndex(1);
+          if (progress < 0.33) setActiveIndex(0);
+          else if (progress < 0.67) setActiveIndex(1);
           else setActiveIndex(2);
         },
       },
     });
+
+    scrollTriggerRef.current = tween.scrollTrigger || null;
 
     return () => {
       tween.scrollTrigger?.kill();
       tween.kill();
     };
   }, []);
+
+  // 카드 클릭 핸들러 - 해당 카드로 스크롤 이동
+  const handleCardClick = (index: number) => {
+    const card = cardRefs.current[index];
+    if (!card || !containerRef.current) return;
+
+    // activeIndex 먼저 업데이트
+    setActiveIndex(index);
+    isManualScrollRef.current = true;
+
+    const gsap = getGSAP();
+    const scrollTrigger = scrollTriggerRef.current;
+
+    if (!gsap || !scrollTrigger || prefersReducedMotion()) {
+      card.scrollIntoView({ behavior: "smooth", block: "center" });
+      setTimeout(() => {
+        isManualScrollRef.current = false;
+      }, 1000);
+      return;
+    }
+
+    // ScrollTrigger의 progress를 직접 조작
+    // 각 카드는 전체 progress의 0, 0.33, 0.67, 1.0에 해당
+    const targetProgress = index / (steps.length - 1);
+
+    // ScrollTrigger의 start와 end를 숫자로 변환
+    // start는 "top 10%" 형식이므로 실제 스크롤 위치를 계산해야 함
+    const trigger = scrollTrigger.trigger as HTMLElement;
+    const triggerStart = scrollTrigger.start as number;
+    const triggerEnd = scrollTrigger.end as number;
+
+    // 목표 스크롤 위치 계산
+    const scrollRange = triggerEnd - triggerStart;
+    const targetScroll = triggerStart + (scrollRange * targetProgress);
+
+    // 부드럽게 스크롤
+    const startY = window.scrollY;
+    const distance = targetScroll - startY;
+    const duration = 0.8;
+    const startTime = performance.now();
+
+    const animateScroll = (currentTime: number) => {
+      const elapsed = (currentTime - startTime) / 1000;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // ease: power2.inOut
+      const eased = progress < 0.5
+        ? 2 * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+      window.scrollTo(0, startY + distance * eased);
+
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll);
+      } else {
+        // 애니메이션 완료 후 플래그 해제
+        setTimeout(() => {
+          isManualScrollRef.current = false;
+        }, 200);
+      }
+    };
+
+    requestAnimationFrame(animateScroll);
+  };
 
   return (
     <section
@@ -79,11 +151,11 @@ export const SharedCrafteryPathSection = ({ steps = DEFAULT_STEPS }: Props) => {
           color: "white",
         }}
       >{`//  Vision that I take my work towards`}</p>
-      <div className="absolute inset-0 opacity-75 flex items-center justify-center">
+      <div className="absolute inset-0 opacity-75 flex items-center justify-center" style={{ zIndex: 0 }}>
         <svg
           viewBox="0 0 910 793"
           fill="none"
-          className="w-full h-full min-w-[900px]"
+          className="w-auto h-auto min-w-[900px]"
           style={{ transform: "scale(1.1)", transformOrigin: "center center" }}
         >
           <defs>
@@ -111,19 +183,25 @@ export const SharedCrafteryPathSection = ({ steps = DEFAULT_STEPS }: Props) => {
         </svg>
       </div>
 
-      <div className="relative grid md:grid-cols-3">
+      <div className="relative grid md:grid-cols-3" style={{ zIndex: 1 }}>
         {steps.map((line, idx) => (
           <div
             key={line}
+            ref={(el) => {
+              cardRefs.current[idx] = el;
+            }}
             className={clsx("card-shell", idx === activeIndex && "active")}
+            data-cursor-focus
+            onClick={() => handleCardClick(idx)}
+            style={{ cursor: "pointer" }}
           >
             <p
-              className="text-h2 text-left leading-snug min-h-[240px]"
+              className="text-h2 text-left leading-snug flex-1"
               style={{
                 color: 'white',
               }}
             >{line}</p>
-            <svg className="self-end absolute bottom-8 right-8" width="78" height="79" viewBox="0 0 78 79" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg className="self-end mt-auto" width="78" height="79" viewBox="0 0 78 79" fill="none" xmlns="http://www.w3.org/2000/svg">
               <line x1="75.9434" y1="39.3552" x2="5.79323e-05" y2="39.3552" stroke="white" stroke-width="2" />
               <line x1="75.2363" y1="39.0623" x2="36.881" y2="0.707122" stroke="white" stroke-width="2" />
               <line x1="76.6505" y1="39.0623" x2="38.2953" y2="77.4175" stroke="white" stroke-width="2" />
