@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   title: "Laura HJ Kim | Portfolio",
   description:
     "Portfolio experience for Laura HJ Kim — interfaces crafted with rhythm, craft, and clarity.",
+  icons: {
+    icon: '/favicon.png', // Uses favicon.png from the public directory
+  },
 };
 
 const ExternalLinkIcon = () => (
