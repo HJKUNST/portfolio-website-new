@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import clsx from "clsx";
 import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 
@@ -169,10 +169,11 @@ export const HeroSection = ({
   }, []);
 
   /** 초기 위치 설정 */
-  useEffect(() => {
-    setCurrentIndex(0);
-    setPositionInstant(0);
-  }, [heroCards, setPositionInstant]);
+  useLayoutEffect(() => {
+    if (heroCards.length > 0 && cardWidth > 0) {
+      setPositionInstant(0);
+    }
+  }, [heroCards.length, cardWidth, setPositionInstant]);
 
   /** 리사이즈 시 현재 위치 유지 */
   useEffect(() => {

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { SmoothScrollProvider } from "@/components/SmoothScrollProvider";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { LookingForTeamSection } from "@/components/sections/LookingForTeamSection";
@@ -29,7 +30,7 @@ const SiteNav = () => {
       style={{
         background: "rgba(202, 202, 202, 0.2)",
       }}>
-      <a className="text-h4-em hover:!text-[var(--secondary)] transition-colors" href="/">Laura HJ Kim</a>
+      <Link className="text-h4-em hover:!text-[var(--secondary)] transition-colors" href="/">Laura HJ Kim</Link>
       <nav className="hidden items-center gap-6 text-h4-em md:flex">
         <a href="#aboutme" className="hover:!text-[var(--secondary)] transition-colors">About Me</a>
         <a href="#works" className="hover:!text-[var(--secondary)] transition-colors">Works</a>
