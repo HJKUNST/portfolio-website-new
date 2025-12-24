@@ -29,12 +29,12 @@ const SiteNav = () => {
       style={{
         background: "rgba(202, 202, 202, 0.2)",
       }}>
-      <a className="text-h4-em hover:text-primary transition-colors" href="/">Laura HJ Kim</a>
+      <a className="text-h4-em hover:!text-[var(--secondary)] transition-colors" href="/">Laura HJ Kim</a>
       <nav className="hidden items-center gap-6 text-h4-em md:flex">
-        <a href="#aboutme" className="hover:text-gray-600 transition-colors">About Me</a>
-        <a href="#works" className="hover:text-gray-600 transition-colors">Works</a>
-        <a href="#blog" className="hover:text-gray-600 transition-colors">Blog</a>
-        <a href="#resume" className="hover:text-gray-600 transition-colors">Resume</a>
+        <a href="#aboutme" className="hover:!text-[var(--secondary)] transition-colors">About Me</a>
+        <a href="#works" className="hover:!text-[var(--secondary)] transition-colors">Works</a>
+        <a href="#blog" className="hover:!text-[var(--secondary)] transition-colors">Blog</a>
+        <a href="#resume" className="hover:!text-[var(--secondary)] transition-colors">Resume</a>
       </nav>
     </header>
   );
@@ -52,10 +52,10 @@ const SiteFooter = () => {
           contemplating interface that sparks between variety.
         </span>
         <div className="flex gap-4 text-h4-em [&>a]:leading-none [&>a:not(:first-child)]:border-sm [&>a:not(:first-child)]:pl-4 [&>a:not(:first-child)]:border-gray-400/60">
-          <a href="https://github.com">Github</a>
-          <a href="https://linkedin.com">LinkedIn</a>
-          <a href="https://t.me">Telegram</a>
-          <a href="mailto:hello@example.com">Email</a>
+          <a href="https://github.com" className="hover:!text-[var(--secondary)] transition-colors">Github</a>
+          <a href="https://linkedin.com" className="hover:!text-[var(--secondary)] transition-colors">LinkedIn</a>
+          <a href="https://t.me" className="hover:!text-[var(--secondary)] transition-colors">Telegram</a>
+          <a href="mailto:hello@example.com" className="hover:!text-[var(--secondary)] transition-colors">Email</a>
         </div>
       </div>
     </footer>

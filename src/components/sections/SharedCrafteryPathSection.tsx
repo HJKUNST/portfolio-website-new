@@ -202,9 +202,9 @@ export const SharedCrafteryPathSection = ({ steps = DEFAULT_STEPS }: Props) => {
               }}
             >{line}</p>
             <svg className="self-end mt-auto" width="78" height="79" viewBox="0 0 78 79" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <line x1="75.9434" y1="39.3552" x2="5.79323e-05" y2="39.3552" stroke="white" stroke-width="2" />
-              <line x1="75.2363" y1="39.0623" x2="36.881" y2="0.707122" stroke="white" stroke-width="2" />
-              <line x1="76.6505" y1="39.0623" x2="38.2953" y2="77.4175" stroke="white" stroke-width="2" />
+              <line x1="75.9434" y1="39.3552" x2="5.79323e-05" y2="39.3552" stroke="white" strokeWidth="2" />
+              <line x1="75.2363" y1="39.0623" x2="36.881" y2="0.707122" stroke="white" strokeWidth="2" />
+              <line x1="76.6505" y1="39.0623" x2="38.2953" y2="77.4175" stroke="white" strokeWidth="2" />
             </svg>
 
           </div>

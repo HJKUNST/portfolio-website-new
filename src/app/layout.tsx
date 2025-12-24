@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { useMemo } from "react";
 import { Crimson_Pro, Manrope } from "next/font/google";
 import "./globals.css";
 import { CustomCursor } from "@/components/CustomCursor";
@@ -51,17 +52,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const selectorIcons = new Map([
-    ["[data-cursor-hover]", <ExternalLinkIcon />],
-    ["[data-cursor-focus]", <FocusIcon />],
-  ]);
+  const selectorIcons = useMemo(() => new Map([
+    ["[data-cursor-hover]", <ExternalLinkIcon key="external" />],
+    ["[data-cursor-focus]", <FocusIcon key="focus" />],
+  ]), []);
 
   return (
     <html lang="en">
       <body className={`${manrope.variable} ${crimsonPro.variable} antialiased`}>
         <LoadingScreen />
         <CustomCursor
-          hoverSelectors={[".card-shell", "[data-cursor-hover]", "[data-cursor-focus]"]}
+          hoverSelectors={[".card-shell", "[data-cursor-hover]", "[data-cursor-focus]", "a", "button"]}
           hoverIcon={<ExternalLinkIcon />}
           selectorIcons={selectorIcons}
         />
