@@ -23,13 +23,13 @@ const crimsonPro = Crimson_Pro({
 export const metadata: Metadata = {
   title: "Laura HJ Kim | Portfolio",
   description:
-    "Portfolio experience for Laura HJ Kim — interfaces crafted with rhythm, craft, and clarity.",
+    "Product Designer at the intersection of design, engineering, and finance.",
   icons: {
     icon: '/favicon.png', // Uses favicon.png from the public directory
   },
   openGraph: {
     title: "Laura HJ Kim | Portfolio",
-    description: "Portfolio for Laura HJ Kim — interfaces crafted with rhythm, craft, and clarity.",
+    description: "Product Designer at the intersection of design, engineering, and finance.",
     images: [
       {
         url: '/thumbnail.png',
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: "Laura HJ Kim | Portfolio",
-    description: "Portfolio for Laura HJ Kim — interfaces crafted with rhythm, craft, and clarity.",
+    description: "Product Designer at the intersection of design, engineering, and finance.",
     images: ['/thumbnail.png'],
   },
 };
@@ -93,7 +93,6 @@ export default function RootLayout({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-
             gtag('config', 'G-5X4DRLNPMF');
           `}
         </Script>

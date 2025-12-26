@@ -2,14 +2,19 @@
   overflow: hidden;
   white-space: nowrap;
   width: 100%;
+  max-width: 100%;
+  /* Ensure it doesn't exceed parent width */
   mask-image: linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%);
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%);
   margin-top: 40px;
 }
 
 .marqueeContent {
-  display: inline-block;
-  animation: marquee 12s linear infinite;
+  display: flex;
+  /* Use flex to keep items in a row */
+  width: max-content;
+  /* Ensure container is wide enough for all items */
+  animation: marquee 40s linear infinite;
 }
 
 .marqueeText {
@@ -29,7 +34,7 @@
   }
 
   100% {
-    transform: translateX(-20%);
+    transform: translateX(-25%);
   }
 }
 

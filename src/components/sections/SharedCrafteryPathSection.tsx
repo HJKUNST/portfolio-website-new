@@ -109,7 +109,7 @@ export const SharedCrafteryPathSection = ({ steps = DEFAULT_STEPS }: Props) => {
     const startY = window.scrollY;
     const distance = targetScroll - startY;
     const duration = 0.8;
-    
+
     // requestAnimationFrame 콜백에서 시작 시간 저장
     let startTime: number | null = null;
 

@@ -17,7 +17,7 @@ type CustomCursorProps = {
 
 export const CustomCursor = ({
   hoverSelectors = [],
-  hoverScale = 2,
+  hoverScale = 4,
   hoverIcon,
   selectorIcons,
 }: CustomCursorProps) => {
@@ -27,19 +27,6 @@ export const CustomCursor = ({
   const SCALE_DOWN = DISPLAY_CURSOR_SIZE / BASE_CURSOR_SIZE;
   const cursorRef = useRef<HTMLDivElement | null>(null);
   const [cursorColor, setCursorColor] = useState("rgba(141, 195, 198, 1)");
-
-  // 색상 보간 함수
-  const interpolateColor = (t: number) => {
-    // t는 0-1 사이의 값 (0 = 파란색, 1 = 빨간색)
-    const blue = { r: 141, g: 195, b: 198 };
-    const red = { r: 253, g: 154, b: 109 };
-
-    const r = Math.round(blue.r + (red.r - blue.r) * t);
-    const g = Math.round(blue.g + (red.g - blue.g) * t);
-    const b = Math.round(blue.b + (red.b - blue.b) * t);
-
-    return `rgba(${r}, ${g}, ${b}, 1)`;
-  };
 
   useEffect(() => {
     if (prefersReducedMotion()) return;
@@ -57,63 +44,75 @@ export const CustomCursor = ({
     const xTo = gsap.quickTo(cursor, "x", { duration: 0.6, ease: "power3" });
     const yTo = gsap.quickTo(cursor, "y", { duration: 0.6, ease: "power3" });
 
-    // 움직임 추적을 위한 변수
-    let lastX = 0;
-    let lastY = 0;
-    let lastScrollY = window.scrollY;
-    let isFirstMove = true;
-    let isMoving = false;
-    let movementTimeout: NodeJS.Timeout | null = null;
-    const MOVEMENT_THRESHOLD = 1; // 픽셀 단위 - 이 이상 움직이면 움직임으로 간주
-    const STOP_DELAY = 200; // 밀리초 - 이 시간 동안 움직임이 없으면 멈춤으로 간주
+    // 색상 정의
+    const BLUE = { r: 141, g: 195, b: 198 };
+    const RED = { r: 253, g: 154, b: 109 };
+    const GRAY = { r: 220, g: 220, b: 220 };
 
-    // 색상 애니메이션을 위한 객체 (0 = 파란색, 1 = 빨간색)
-    const colorObj = { t: 0 };
+    // 현재 색상 상태 (RGB)
+    const currentColorObj = { ...BLUE };
     let colorTween: gsap.core.Tween | null = null;
 
+    // 상태 플래그
+    let isHovering = false;
+    let isMoving = false;
+
     // 색상 업데이트 함수
-    const updateColor = (shouldBeRed: boolean) => {
-      const targetT = shouldBeRed ? 1 : 0;
-
-      // 이미 목표 색상이면 업데이트하지 않음
-      if (colorObj.t === targetT && isMoving === shouldBeRed) return;
-
-      isMoving = shouldBeRed;
-
-      // 부드러운 애니메이션으로 색상 업데이트
-      if (colorTween) {
-        colorTween.kill();
+    const updateCursorColor = () => {
+      let target = BLUE;
+      // Hover가 최우선
+      if (isHovering) {
+        target = GRAY;
       }
-      colorTween = gsap.to(colorObj, {
-        t: targetT,
+      // 그 다음이 움직임
+      else if (isMoving) {
+        target = RED;
+      }
+      // 아무것도 아니면 BLUE (기본)
+
+      if (colorTween) colorTween.kill();
+
+      colorTween = gsap.to(currentColorObj, {
+        r: target.r,
+        g: target.g,
+        b: target.b,
         duration: 0.4,
         ease: "power2.out",
         onUpdate: () => {
-          const color = interpolateColor(colorObj.t);
-          setCursorColor(color);
+          setCursorColor(`rgba(${Math.round(currentColorObj.r)}, ${Math.round(currentColorObj.g)}, ${Math.round(currentColorObj.b)}, 1)`);
         },
       });
     };
 
-    // 스크롤 움직임 추적
+    const setMoving = (moving: boolean) => {
+      // 상태가 바뀌었을 때만 업데이트
+      if (isMoving !== moving) {
+        isMoving = moving;
+        updateCursorColor();
+      }
+    };
+
+    // 움직임 추적 변수
+    let lastX = 0;
+    let lastY = 0;
+    let lastScrollY = window.scrollY;
+    let isFirstMove = true;
+    let movementTimeout: NodeJS.Timeout | null = null;
+    const MOVEMENT_THRESHOLD = 1;
+    const STOP_DELAY = 200;
+
     const handleScroll = () => {
       const scrollDelta = Math.abs(window.scrollY - lastScrollY);
-
-      // 스크롤 움직임이 있으면 빨간색으로
       if (scrollDelta > MOVEMENT_THRESHOLD) {
-        updateColor(true);
-
-        // 스크롤 멈춤 감지
+        setMoving(true);
         if (movementTimeout) clearTimeout(movementTimeout);
         movementTimeout = setTimeout(() => {
-          updateColor(false);
+          setMoving(false);
         }, STOP_DELAY);
       }
-
       lastScrollY = window.scrollY;
     };
 
-    // 마우스 움직임 추적
     const handleMouseMove = (e: MouseEvent) => {
       if (isFirstMove) {
         lastX = e.clientX;
@@ -128,30 +127,24 @@ export const CustomCursor = ({
       const dy = e.clientY - lastY;
       const distance = Math.sqrt(dx * dx + dy * dy);
 
-      // 마우스 움직임이 있으면 빨간색으로
       if (distance > MOVEMENT_THRESHOLD) {
-        updateColor(true);
-
-        // 마우스 멈춤 감지
+        setMoving(true);
         if (movementTimeout) clearTimeout(movementTimeout);
         movementTimeout = setTimeout(() => {
-          updateColor(false);
+          setMoving(false);
         }, STOP_DELAY);
       }
 
       lastX = e.clientX;
       lastY = e.clientY;
-
       xTo(e.clientX);
       yTo(e.clientY);
     };
 
-    // hover 상태 관리
-    let isHovering = false;
-
     const handleMouseEnter = () => {
       if (isHovering) return;
       isHovering = true;
+      updateCursorColor();
 
       gsap.to(cursor, {
         scale: hoverScale,
@@ -163,6 +156,7 @@ export const CustomCursor = ({
     const handleMouseLeave = () => {
       if (!isHovering) return;
       isHovering = false;
+      updateCursorColor();
 
       gsap.to(cursor, {
         scale: 1,
@@ -171,7 +165,6 @@ export const CustomCursor = ({
       });
     };
 
-    // hover 대상 요소들에 이벤트 리스너 추가
     const hoverElements: Element[] = [];
     hoverSelectors.forEach((selector) => {
       const elements = document.querySelectorAll(selector);
@@ -200,7 +193,7 @@ export const CustomCursor = ({
   return (
     <div
       ref={cursorRef}
-      className="fixed top-0 left-0 pointer-events-none z-[9999] mix-blend-difference"
+      className="fixed top-0 left-0 pointer-events-none z-[9999] mix-blend-difference max-[700px]:hidden"
       style={{ willChange: "transform", transform: "translate3d(0,0,0)" }}
     >
       <div
@@ -232,4 +225,3 @@ export const CustomCursor = ({
     </div>
   );
 };
-

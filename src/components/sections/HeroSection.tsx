@@ -74,6 +74,7 @@ export const HeroSection = ({
   // State
   const [currentIndex, setCurrentIndex] = useState(0);
   const [cardWidth, setCardWidth] = useState(0);
+  const [containerWidth, setContainerWidth] = useState(0);
 
   // Derived values
   const marqueeText = useMemo(() => tags.join(" · "), [tags]);
@@ -90,9 +91,40 @@ export const HeroSection = ({
   }, [cards]);
 
   const totalCards = heroCards.length;
-  const lastIndex = Math.max(totalCards - 1, 0);
+
+  // 마지막 인덱스 계산 (컨테이너 오버플로우 방지)
+  // 카드가 화면에 꽉 찰 때까지만 스크롤 허용
+  const visibleCardsExact = itemWidth > 0 ? containerWidth / itemWidth : 1;
+  // 완전히 보이는 카드 수 (소수점 포함)로 계산하여
+  // 전체 카드 수 - 보이는 카드 수 = 이동 가능한 최대 인덱스
+  // e.g. 4개 카드, 화면에 2.5개 보임 -> 1.5개만큼만 이동 가능 (인덱스 1 또는 2)
+  // 정수 단위 이동이므로 floor 사용하면 더 안전 (빈 공간 안 보임)
+  // ceil 사용하면 마지막에 약간의 빈 공간 허용하더라도 끝까지 보여줌
+  // "빈 공간이 너무 많은데" -> 빈 공간 최소화 = floor에 가깝게.
+  // 그러나 단순히 floor하면 마지막 카드가 짤릴 수 있음.
+  // Math.max(0, totalCards - Math.ceil(visibleCardsExact) + (visibleCardsExact % 1 > 0.1 ? 0 : 0)) logic is complex.
+  // Simple heuristic: totalCards - Math.floor(containerWidth / itemWidth).
+  // If container fits 3.5 cards. Total 4.
+  // lastIndex = 4 - 3 = 1.
+  // Index 0: 0, 1, 2, 3(half)
+  // Index 1: 1, 2, 3, empty(half) -> NO.
+
+  // If we scroll to index, left side is at index.
+  // If we want last card to be right aligned:
+  // Offset = TrackLength - ContainerLength.
+  // But we snap to items.
+  // So we limit index s.t. index * itemWidth <= TrackLength - ContainerLength.
+  // index <= (totalCards * itemWidth - containerWidth) / itemWidth.
+  // index <= totalCards - (containerWidth / itemWidth).
+
+  // 마지막 인덱스 계산
+  const maxScrollWidth = Math.max(0, totalCards * itemWidth - GAP - containerWidth);
+  const maxIndexFloat = itemWidth > 0 ? (totalCards * itemWidth - GAP - containerWidth) / itemWidth : 0;
+  // 여유있게 끝까지 갈 수 있도록 ceil 사용
+  const lastIndex = Math.max(0, Math.ceil(maxIndexFloat));
+
   const isAtStart = currentIndex === 0;
-  const isAtEnd = currentIndex === lastIndex;
+  const isAtEnd = currentIndex >= lastIndex;
 
   // ============================================
   // Carousel Navigation
@@ -102,7 +134,25 @@ export const HeroSection = ({
   const setPositionInstant = useCallback((index: number) => {
     if (!trackRef.current || itemWidth === 0) return;
 
-    const x = -index * itemWidth;
+    // Smart Centering Logic:
+    // 1. 기본적으로 중앙 정렬 시도
+    const cardW = itemWidth - GAP;
+    const centerOffset = (containerWidth - cardW) / 2;
+    let x = centerOffset - index * itemWidth;
+
+    // 2. Constraints (우선순위 순서대로 적용)
+
+    // A. Active Card의 왼쪽이 잘리지 않도록 보장 (Left Visibility)
+    //    (카드가 컨테이너보다 클 때 왼쪽 정렬 강제)
+    x = Math.max(x, -index * itemWidth);
+
+    // B. 맨 왼쪽(Start)에 빈 공간이 생기지 않도록 제한 (gap 방지)
+    //    (카드가 컨테이너보다 작을 때 왼쪽 정렬 강제 for Index 0)
+    x = Math.min(x, 0);
+
+    // C. 맨 오른쪽(End)에 빈 공간이 생기지 않도록 제한
+    x = Math.max(x, -maxScrollWidth);
+
     const gsap = getGSAP();
 
     if (gsap) {
@@ -110,13 +160,21 @@ export const HeroSection = ({
     } else {
       trackRef.current.style.transform = `translateX(${x}px)`;
     }
-  }, [itemWidth]);
+  }, [itemWidth, maxScrollWidth, containerWidth]);
 
   /** 트랙을 특정 인덱스로 애니메이션 */
   const animateToIndex = useCallback((index: number, onComplete?: () => void) => {
     if (!trackRef.current || itemWidth === 0) return;
 
-    const x = -index * itemWidth;
+    const cardW = itemWidth - GAP;
+    const centerOffset = (containerWidth - cardW) / 2;
+    let x = centerOffset - index * itemWidth;
+
+    // Constraints
+    x = Math.max(x, -index * itemWidth); // A. Left Visibility
+    x = Math.min(x, 0); // B. Start Boundary
+    x = Math.max(x, -maxScrollWidth); // C. End Boundary
+
     const gsap = getGSAP();
 
     if (!gsap || prefersReducedMotion()) {
@@ -131,7 +189,7 @@ export const HeroSection = ({
       ease: "power2.out",
       onComplete,
     });
-  }, [itemWidth, setPositionInstant]);
+  }, [itemWidth, setPositionInstant, maxScrollWidth, containerWidth]);
 
   /** 특정 인덱스로 이동 (범위 제한 적용) */
   const goToIndex = useCallback((newIndex: number) => {
@@ -157,15 +215,17 @@ export const HeroSection = ({
 
   /** 컨테이너 높이 기반으로 카드 너비 계산 (4:3 비율 유지) */
   useEffect(() => {
-    const updateCardWidth = () => {
+    const updateDimensions = () => {
       if (!containerRef.current) return;
       const height = containerRef.current.offsetHeight;
+      const width = containerRef.current.offsetWidth;
       setCardWidth(Math.round(height * (4 / 3)));
+      setContainerWidth(width);
     };
 
-    updateCardWidth();
-    window.addEventListener("resize", updateCardWidth);
-    return () => window.removeEventListener("resize", updateCardWidth);
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
   }, []);
 
   /** 초기 위치 설정 */
@@ -222,8 +282,7 @@ export const HeroSection = ({
       {/* Carousel */}
       <div
         ref={containerRef}
-        className="relative overflow-hidden py-4 bg-[rgba(206,225,226,0.2)]"
-        style={{ height: "min(60vh, 640px)" }}
+        className="relative overflow-hidden py-4 bg-[rgba(206,225,226,0.2)] w-full aspect-[4/3] md:aspect-auto md:h-[min(60vh,640px)]"
       >
         <div
           ref={trackRef}
@@ -255,7 +314,7 @@ export const HeroSection = ({
 const TagsMarquee = ({ text }: { text: string }) => (
   <div className={clsx(styles.marqueeWrapper, "text-body text-gray-500")} aria-label={text}>
     <div className={styles.marqueeContent}>
-      {[0, 1].map((i) => (
+      {[0, 1, 2, 3].map((i) => (
         <span key={i} className={styles.marqueeText}>
           {text}
         </span>
