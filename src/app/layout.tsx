@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { useMemo } from "react";
 import { Crimson_Pro, Manrope } from "next/font/google";
 import "./globals.css";
@@ -25,6 +26,25 @@ export const metadata: Metadata = {
     "Portfolio experience for Laura HJ Kim — interfaces crafted with rhythm, craft, and clarity.",
   icons: {
     icon: '/favicon.png', // Uses favicon.png from the public directory
+  },
+  openGraph: {
+    title: "Laura HJ Kim | Portfolio",
+    description: "Portfolio for Laura HJ Kim — interfaces crafted with rhythm, craft, and clarity.",
+    images: [
+      {
+        url: '/thumbnail.png',
+        width: 1200,
+        height: 630,
+        alt: 'Laura HJ Kim Portfolio Thumbnail',
+      },
+    ],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Laura HJ Kim | Portfolio",
+    description: "Portfolio for Laura HJ Kim — interfaces crafted with rhythm, craft, and clarity.",
+    images: ['/thumbnail.png'],
   },
 };
 
@@ -63,6 +83,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${manrope.variable} ${crimsonPro.variable} antialiased`}>
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-5X4DRLNPMF"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-5X4DRLNPMF');
+          `}
+        </Script>
+
         <LoadingScreen />
         <CustomCursor
           hoverSelectors={[".card-shell", "[data-cursor-hover]", "[data-cursor-focus]", "a", "button"]}
