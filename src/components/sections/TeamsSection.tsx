@@ -265,14 +265,17 @@ export const TeamsSection = ({
       <p
         className="text-h3-em mb-[48px]"
         style={{
-          background: "none",
-          WebkitBackgroundClip: "unset",
-          backgroundClip: "unset",
-          color: "var(--gray-300)",
+          background: "var(--main-gradient)",
+          WebkitBackgroundClip: "text",
+          backgroundClip: "text",
+          color: "transparent",
+          textAlign: "left",
+          display: "block",
+          width: "100%",
         }}
-      >{`// Teams that I've made great outputs with`}</p>
+      >{`// teams i've made great outputs with`}</p>
       <p
-        className="my-6 text-h2 text-gray-900 leading-snug w-[50%] pb-[8%] relative z-0"
+        className="my-6 text-h2 text-gray-900 leading-snug w-full md:w-[60%] pb-[8%] relative z-0"
       >
         I believe the strongest products are built through{" "}
         <span className="text-h2-em text-secondary align-baseline" style={{ lineHeight: 0.9 }}>shared craft</span>
@@ -281,21 +284,23 @@ export const TeamsSection = ({
 
       {/* 카드 그리드 */}
       <div
-        className={`${GRID_CONFIG.marginTop} relative w-full grid sm:grid-cols-2 lg:grid-cols-4 justify-items-center `}
+        className={`${GRID_CONFIG.marginTop} relative w-full grid grid-cols-2 lg:grid-cols-4 justify-items-center pl-0 pr-[20px] md:pl-[120px]`}
         style={{
-          paddingLeft: GRID_CONFIG.paddingLeft,
-          paddingRight: GRID_CONFIG.paddingRight,
-          gap: GRID_CONFIG.gap,
           zIndex: 1,
         }}
       >
         {cards.map((team, idx) => (
-          <TeamCard
+          <div
             key={team.name}
-            team={team}
-            index={idx}
-            onClick={() => setSelectedTeam(team)}
-          />
+            className="w-full relative mb-[-20px] mr-[-20px]"
+            style={{ zIndex: 10 - idx }}
+          >
+            <TeamCard
+              team={team}
+              index={idx}
+              onClick={() => setSelectedTeam(team)}
+            />
+          </div>
         ))}
       </div>
 

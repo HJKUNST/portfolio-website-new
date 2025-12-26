@@ -402,10 +402,10 @@ const HeroCard = ({ card }: { card: CardWithKey }) => (
           {/* Title & Subtitle - 하단 */}
           <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
             <h3
-              className="text-white text-h2 font-semibold whitespace-pre-line"
+              className="text-white font-semibold whitespace-pre-line"
               style={{
                 color: 'white',
-
+                fontSize: 'clamp(20px, 4vw, 36px)',
               }}
             >{card.title}</h3>
             {card.subtitle && (

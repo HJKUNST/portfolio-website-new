@@ -82,7 +82,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${manrope.variable} ${crimsonPro.variable} antialiased`}>
+      <body className={`${manrope.variable} ${crimsonPro.variable} antialiased overflow-x-hidden`}>
         {/* Google Analytics */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-5X4DRLNPMF"

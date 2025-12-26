@@ -42,6 +42,7 @@
   box-sizing: border-box;
 }
 
+html,
 body {
   margin: 0;
   /* background: linear-gradient(180deg, #ffffff 0%, #f3f7f8 28%, #e7f3f4 100%); */
@@ -50,6 +51,8 @@ body {
     BlinkMacSystemFont, "Segoe UI", sans-serif;
   letter-spacing: var(--em-letter);
   line-height: 1.4;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 a {

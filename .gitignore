@@ -35,6 +35,8 @@ yarn-error.log*
 # optional explicit figma creds files
 figma-token.txt
 figma-key.txt
+.env.example
+.env.local
 
 # vercel
 .vercel
@@ -42,3 +44,9 @@ figma-key.txt
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+DEPLOYMENT_CHECKLIST.md
+DEPLOYMENT_GUIDE.md
+DEPLOYMENT_REVIEW.md
+ROLLBACK_STRATEGY.md
+SECURITY_CHECKLIST.md

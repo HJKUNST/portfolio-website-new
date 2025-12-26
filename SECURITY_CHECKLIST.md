@@ -226,3 +226,4 @@ const nextConfig: NextConfig = {
 **마지막 업데이트**: 2024년
 **담당자**: 개발팀
 
+
