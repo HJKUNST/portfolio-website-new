@@ -13,6 +13,8 @@ type CustomCursorProps = {
   hoverIcon?: string | React.ReactNode;
   /** 선택자별 아이콘 매핑 (선택자가 매칭되면 해당 아이콘 사용) */
   selectorIcons?: Map<string, string | React.ReactNode>;
+  /** mix-blend-difference 적용 여부 (기본값: true) */
+  useBlendDifference?: boolean;
 };
 
 export const CustomCursor = ({
@@ -20,6 +22,7 @@ export const CustomCursor = ({
   hoverScale = 4,
   hoverIcon,
   selectorIcons,
+  useBlendDifference = true,
 }: CustomCursorProps) => {
   // 더 큰 캔버스에 그리고 축소해두면 확대 시에도 깨짐이 줄어듭니다.
   const BASE_CURSOR_SIZE = 128;
@@ -193,7 +196,7 @@ export const CustomCursor = ({
   return (
     <div
       ref={cursorRef}
-      className="fixed top-0 left-0 pointer-events-none z-[9999] mix-blend-difference max-[700px]:hidden"
+      className={`fixed top-0 left-0 pointer-events-none z-[9999] max-[700px]:hidden ${useBlendDifference ? "mix-blend-difference" : ""}`}
       style={{ willChange: "transform", transform: "translate3d(0,0,0)" }}
     >
       <div

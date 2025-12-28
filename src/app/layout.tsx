@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { useMemo } from "react";
 import { Crimson_Pro, Manrope } from "next/font/google";
 import "./globals.css";
-import { CustomCursor } from "@/components/CustomCursor";
+import { CursorProvider } from "@/components/CursorProvider";
 import { LoadingScreen } from "@/components/LoadingScreen";
 
 const manrope = Manrope({
@@ -75,11 +74,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const selectorIcons = useMemo(() => new Map([
-    ["[data-cursor-hover]", <ExternalLinkIcon key="external" />],
-    ["[data-cursor-focus]", <FocusIcon key="focus" />],
-  ]), []);
-
   return (
     <html lang="en">
       <body className={`${manrope.variable} ${crimsonPro.variable} antialiased overflow-x-hidden`}>
@@ -98,11 +92,7 @@ export default function RootLayout({
         </Script>
 
         <LoadingScreen />
-        <CustomCursor
-          hoverSelectors={[".card-shell", "[data-cursor-hover]", "[data-cursor-focus]", "a", "button"]}
-          hoverIcon={<ExternalLinkIcon />}
-          selectorIcons={selectorIcons}
-        />
+        <CursorProvider />
         {children}
       </body>
     </html>
