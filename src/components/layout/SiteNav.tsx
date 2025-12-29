@@ -17,9 +17,9 @@ export const SiteNav = () => {
         <Link href="/about" className="hover:!text-[var(--secondary)] transition-colors">
           About Me
         </Link>
-        {/* <Link href="/works" className="hover:!text-[var(--secondary)] transition-colors">
+        <Link href="/works" className="hover:!text-[var(--secondary)] transition-colors">
           Works
-        </Link> */}
+        </Link>
         <a href="#blog" className="hover:!text-[var(--secondary)] transition-colors">
           Blog
         </a>
