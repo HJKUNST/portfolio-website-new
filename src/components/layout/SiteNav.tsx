@@ -23,7 +23,7 @@ export const SiteNav = () => {
         <a href="#blog" className="hover:!text-[var(--secondary)] transition-colors">
           Blog
         </a>
-        <a href="#resume" className="hover:!text-[var(--secondary)] transition-colors">
+        <a href="https://docsend.com/v/h2z52/laura_kim_productdesigner_detailed" target="_blank" className="hover:!text-[var(--secondary)] transition-colors">
           Resume
         </a>
       </nav>
