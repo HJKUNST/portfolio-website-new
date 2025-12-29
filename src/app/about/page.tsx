@@ -3,7 +3,7 @@
 import { SmoothScrollProvider } from "@/components/SmoothScrollProvider";
 import { SiteNav } from "@/components/layout/SiteNav";
 import { SiteFooter } from "@/components/layout/SiteFooter";
-import { AboutMeSection } from "@/components/sections/AboutMeSection";
+import { AboutMeSection } from "@/components/sections/AboutMePage";
 
 export default function AboutPage() {
   return (

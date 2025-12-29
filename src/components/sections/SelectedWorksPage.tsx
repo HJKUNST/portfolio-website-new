@@ -4,6 +4,32 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { getGSAP, ScrollTrigger } from "@/lib/motion/gsap";
 
+const TitleStyle = {
+  fontFamily: "var(--font-manrope), Manrope, sans-serif",
+  fontSize: "clamp(28px, 3.5vw, 40px)",
+  fontWeight: 500,
+  letterSpacing: "-0.02em",
+  lineHeight: "1.6em",
+};
+
+const BodyStyle = {
+  color: "var(--gray-300)",
+  lineHeight: "1.6em",
+  fontSize: "clamp(18px, 2.5vw, 24px)",
+};
+
+const subtitleStyle = {
+  fontFamily: "var(--font-manrope), Manrope, sans-serif",
+  fontSize: "clamp(18px, 1.6vw, 20px)",
+  fontWeight: 700,
+  letterSpacing: "-0.02em",
+  lineHeight: "1.6em",
+  background: "var(--main-gradient)",
+  WebkitBackgroundClip: "text",
+  backgroundClip: "text",
+  color: "transparent",
+};
+
 type WorkItem = {
   id: string;
   year: string;
@@ -69,13 +95,7 @@ export const SelectedWorksSection = () => {
           {/* Main Title */}
           <h1
             className="text-h1-gradient mb-4"
-            style={{
-              fontFamily: "var(--font-manrope), Manrope, sans-serif",
-              fontSize: "clamp(28px, 3.5vw, 36px)",
-              fontWeight: 500,
-              letterSpacing: "-0.02em",
-              lineHeight: "1.333em",
-            }}
+            style={TitleStyle}
           >
             Selected Works
           </h1>
@@ -84,9 +104,7 @@ export const SelectedWorksSection = () => {
           <p
             className="text-em mb-16"
             style={{
-              color: "var(--gray-300)",
-              lineHeight: "1.366em",
-              fontSize: "clamp(12px, 1.2vw, 14px)",
+              ...BodyStyle,
               maxWidth: "505px",
             }}
           >
@@ -100,9 +118,8 @@ export const SelectedWorksSection = () => {
                   <span
                     className="text-em"
                     style={{
+                      ...BodyStyle,
                       color: "var(--gray-900)",
-                      fontSize: "clamp(12px, 1.2vw, 14px)",
-                      lineHeight: "1.571em",
                       fontWeight: 500,
                       minWidth: "33px",
                     }}
@@ -112,10 +129,12 @@ export const SelectedWorksSection = () => {
                   <h3
                     className="text-em"
                     style={{
+                      ...subtitleStyle,
                       color: "var(--gray-900)",
-                      fontSize: "clamp(12px, 1.2vw, 14px)",
-                      lineHeight: "1.571em",
                       fontWeight: 500,
+                      background: "none",
+                      WebkitBackgroundClip: "border-box",
+                      backgroundClip: "border-box",
                     }}
                   >
                     {work.title}
@@ -125,9 +144,7 @@ export const SelectedWorksSection = () => {
                   <p
                     className="text-em ml-[49px] whitespace-pre-line"
                     style={{
-                      color: "var(--gray-300)",
-                      fontSize: "clamp(12px, 1.2vw, 14px)",
-                      lineHeight: "1.571em",
+                      ...BodyStyle,
                       opacity: 0.5,
                     }}
                   >
@@ -142,11 +159,10 @@ export const SelectedWorksSection = () => {
         {/* Right Column: Scrollable Cards */}
         <div className="flex flex-col gap-8">
           {works.map((work) => (
-            <div key={work.id} className="group relative">
-              {/* Work Image Card with Hero-style hover */}
+            <div key={work.id} className="relative">
+              {/* Work Image Card */}
               <div
-                className="relative w-full aspect-[546/427] overflow-hidden rounded-2xl cursor-pointer"
-                data-cursor-hover
+                className="relative w-full aspect-[546/427] overflow-hidden rounded-2xl"
                 style={{
                   backgroundColor: "#FFFFFF",
                 }}
@@ -155,37 +171,9 @@ export const SelectedWorksSection = () => {
                   src={work.image}
                   alt={work.title}
                   fill
-                  className="object-cover transition-all duration-300"
+                  className="object-cover"
                   priority={work.id === "eisen-trading"}
                   quality={85}
-                />
-                {/* Hover overlay similar to HeroSection */}
-                <div className="absolute inset-0 bg-black/60 backdrop-blur-[4px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                  <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                    <h3
-                      className="text-white font-semibold mb-2"
-                      style={{
-                        fontSize: "clamp(14px, 1.5vw, 18px)",
-                        lineHeight: "1.366em",
-                      }}
-                    >
-                      {work.title}
-                    </h3>
-                    <p
-                      className="text-white/80 text-right"
-                      style={{
-                        fontSize: "clamp(10px, 1.2vw, 12px)",
-                        lineHeight: "1.366em",
-                      }}
-                    >
-                      {work.year}
-                    </p>
-                  </div>
-                </div>
-                {/* Inset shadow overlay */}
-                <div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{ boxShadow: "inset 0 0 50px 0 #85adaf" }}
                 />
               </div>
 

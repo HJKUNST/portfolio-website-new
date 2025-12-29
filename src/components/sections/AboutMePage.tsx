@@ -5,6 +5,32 @@ import { useEffect, useRef } from "react";
 import { getGSAP, ScrollTrigger } from "@/lib/motion/gsap";
 import { prefersReducedMotion } from "@/lib/motion/constants";
 
+const TitleStyle = {
+  fontFamily: "var(--font-manrope), Manrope, sans-serif",
+  fontSize: "clamp(28px, 3.5vw, 40px)",
+  fontWeight: 500,
+  letterSpacing: "-0.02em",
+  lineHeight: "1.333em",
+};
+
+const BodyStyle = {
+  color: "var(--gray-300)",
+  lineHeight: "1.366em",
+  fontSize: "clamp(14px, 1.6vw, 20px)",
+};
+
+const subtitleStyle = {
+  fontFamily: "var(--font-manrope), Manrope, sans-serif",
+  fontSize: "clamp(18px, 1.6vw, 20px)",
+  fontWeight: 700,
+  letterSpacing: "-0.02em",
+  lineHeight: "1.571em",
+  background: "var(--main-gradient)",
+  WebkitBackgroundClip: "text",
+  backgroundClip: "text",
+  color: "transparent",
+};
+
 export const AboutMeSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -92,7 +118,7 @@ export const AboutMeSection = () => {
             ref={(el) => {
               contentRefs.current[0] = el;
             }}
-            className="relative w-full aspect-[295/393]"
+            className="relative w-[25vw] min-w-[24rem] aspect-[295/393]"
           >
             <Image
               src="/about-me-photo-1526fe.png"
@@ -111,11 +137,7 @@ export const AboutMeSection = () => {
           >
             <p
               className="text-em whitespace-pre-line"
-              style={{
-                color: "var(--gray-300)",
-                lineHeight: "1.366em",
-                fontSize: "clamp(12px, 1.2vw, 14px)",
-              }}
+              style={BodyStyle}
             >
               {`Hobbies
                 Making New Stuffs such as - Anatomy Sketch, Pottery, Ballet, Savoring Performing Arts`}
@@ -133,23 +155,13 @@ export const AboutMeSection = () => {
           >
             <h2
               className="text-h2 mb-4"
-              style={{
-                fontFamily: "var(--font-manrope), Manrope, sans-serif",
-                fontSize: "clamp(28px, 3.5vw, 36px)",
-                fontWeight: 500,
-                letterSpacing: "-0.02em",
-                lineHeight: "1.333em",
-              }}
+              style={TitleStyle}
             >
               About Me
             </h2>
             <p
               className="text-em"
-              style={{
-                color: "var(--gray-300)",
-                lineHeight: "1.366em",
-                fontSize: "clamp(12px, 1.2vw, 14px)",
-              }}
+              style={BodyStyle}
             >
               Hi, I'm Laura, a Product Designer working at the intersection of design, engineering, and finance. I specialize in taking complex trading logic and multi-chain systems and shaping them into interfaces that feel clear, trustworthy, and usable. My experience spans both on-chain and CEX trading products, system modeling, and data-informed iteration across web3 applications.
             </p>
@@ -163,13 +175,7 @@ export const AboutMeSection = () => {
           >
             <h2
               className="text-h2 mb-8"
-              style={{
-                fontFamily: "var(--font-manrope), Manrope, sans-serif",
-                fontSize: "clamp(28px, 3.5vw, 36px)",
-                fontWeight: 500,
-                letterSpacing: "-0.02em",
-                lineHeight: "1.333em",
-              }}
+              style={TitleStyle}
             >
               Mindset
             </h2>
@@ -179,27 +185,13 @@ export const AboutMeSection = () => {
               <div>
                 <h3
                   className="text-h3-em mb-3"
-                  style={{
-                    fontFamily: "var(--font-manrope), Manrope, sans-serif",
-                    fontSize: "clamp(12px, 1.2vw, 14px)",
-                    fontWeight: 700,
-                    letterSpacing: "-0.02em",
-                    lineHeight: "1.571em",
-                    background: "var(--main-gradient)",
-                    WebkitBackgroundClip: "text",
-                    backgroundClip: "text",
-                    color: "transparent",
-                  }}
+                  style={subtitleStyle}
                 >
                   Team-Driven, Thinking in Systems
                 </h3>
                 <p
                   className="text-em"
-                  style={{
-                    color: "var(--gray-300)",
-                    lineHeight: "1.366em",
-                    fontSize: "clamp(12px, 1.2vw, 14px)",
-                  }}
+                  style={BodyStyle}
                 >
                   Design works best as a team sport. Start with shared goals, constraints, and system context—screens come later. Decisions stay grounded when product, engineering, and design move in the same frame.
                 </p>
@@ -209,27 +201,13 @@ export const AboutMeSection = () => {
               <div>
                 <h3
                   className="text-h3-em mb-3"
-                  style={{
-                    fontFamily: "var(--font-manrope), Manrope, sans-serif",
-                    fontSize: "clamp(12px, 1.2vw, 14px)",
-                    fontWeight: 700,
-                    letterSpacing: "-0.02em",
-                    lineHeight: "1.571em",
-                    background: "var(--main-gradient)",
-                    WebkitBackgroundClip: "text",
-                    backgroundClip: "text",
-                    color: "transparent",
-                  }}
+                  style={subtitleStyle}
                 >
                   Giving Shape to What's Not Yet Defined
                 </h3>
                 <p
                   className="text-em"
-                  style={{
-                    color: "var(--gray-300)",
-                    lineHeight: "1.366em",
-                    fontSize: "clamp(12px, 1.2vw, 14px)",
-                  }}
+                  style={BodyStyle}
                 >
                   Undefined, technically dense products are the fun ones. Information architecture, states, and edge cases come before UI. The work is about giving systems a shape people can recognize, use, and trust.
                 </p>
@@ -239,27 +217,13 @@ export const AboutMeSection = () => {
               <div>
                 <h3
                   className="text-h3-em mb-3"
-                  style={{
-                    fontFamily: "var(--font-manrope), Manrope, sans-serif",
-                    fontSize: "clamp(12px, 1.2vw, 14px)",
-                    fontWeight: 700,
-                    letterSpacing: "-0.02em",
-                    lineHeight: "1.571em",
-                    background: "var(--main-gradient)",
-                    WebkitBackgroundClip: "text",
-                    backgroundClip: "text",
-                    color: "transparent",
-                  }}
+                  style={subtitleStyle}
                 >
                   Build, Craft, and Refine with Rigor
                 </h3>
                 <p
                   className="text-em"
-                  style={{
-                    color: "var(--gray-300)",
-                    lineHeight: "1.366em",
-                    fontSize: "clamp(12px, 1.2vw, 14px)",
-                  }}
+                  style={BodyStyle}
                 >
                   Assumptions don't scale—data does. Analytics and dashboards guide iteration, not gut feeling. Technical architecture gets translated across interfaces, decks, and brand assets, keeping the story consistent from protocol to pixel.
                 </p>
@@ -275,13 +239,7 @@ export const AboutMeSection = () => {
           >
             <h2
               className="text-h2 mb-8"
-              style={{
-                fontFamily: "var(--font-manrope), Manrope, sans-serif",
-                fontSize: "clamp(28px, 3.5vw, 36px)",
-                fontWeight: 500,
-                letterSpacing: "-0.02em",
-                lineHeight: "1.333em",
-              }}
+              style={TitleStyle}
             >
               Software
             </h2>
@@ -289,11 +247,7 @@ export const AboutMeSection = () => {
               <div>
                 <p
                   className="text-em whitespace-pre-line"
-                  style={{
-                    color: "var(--gray-300)",
-                    lineHeight: "1.366em",
-                    fontSize: "clamp(12px, 1.2vw, 14px)",
-                  }}
+                  style={BodyStyle}
                 >
                   {`Figma
 Framer
@@ -305,11 +259,7 @@ Maze`}
               <div>
                 <p
                   className="text-em whitespace-pre-line"
-                  style={{
-                    color: "var(--gray-300)",
-                    lineHeight: "1.366em",
-                    fontSize: "clamp(12px, 1.2vw, 14px)",
-                  }}
+                  style={BodyStyle}
                 >
                   {`Adobe Suite
 Illustrator
@@ -321,11 +271,7 @@ After Effect`}
               <div>
                 <p
                   className="text-em whitespace-pre-line"
-                  style={{
-                    color: "var(--gray-300)",
-                    lineHeight: "1.366em",
-                    fontSize: "clamp(12px, 1.2vw, 14px)",
-                  }}
+                  style={BodyStyle}
                 >
                   {`Protopie
 HTML5
@@ -337,11 +283,7 @@ Tailwind`}
               <div>
                 <p
                   className="text-em whitespace-pre-line"
-                  style={{
-                    color: "var(--gray-300)",
-                    lineHeight: "1.366em",
-                    fontSize: "clamp(12px, 1.2vw, 14px)",
-                  }}
+                  style={BodyStyle}
                 >
                   {`Storybook
 Git
@@ -359,23 +301,13 @@ Blender`}
           >
             <h2
               className="text-h2 mb-4"
-              style={{
-                fontFamily: "var(--font-manrope), Manrope, sans-serif",
-                fontSize: "clamp(28px, 3.5vw, 36px)",
-                fontWeight: 500,
-                letterSpacing: "-0.02em",
-                lineHeight: "1.333em",
-              }}
+              style={TitleStyle}
             >
               Education
             </h2>
             <p
               className="text-em whitespace-pre-line"
-              style={{
-                color: "var(--gray-300)",
-                lineHeight: "1.366em",
-                fontSize: "clamp(12px, 1.2vw, 14px)",
-              }}
+              style={BodyStyle}
             >
               {`Hongik University, Seoul, South Korea
 
@@ -389,4 +321,3 @@ Relevant Coursework: Computational Thinking, Web Programming, Business Programmi
     </section>
   );
 };
-
