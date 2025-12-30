@@ -54,7 +54,7 @@ type Props = {
   cards?: PortfolioCard[];
 };
 
-type CardWithKey = PortfolioCard & { _key: string };
+export type CardWithKey = PortfolioCard & { _key: string };
 
 // ============================================
 // Main Component
@@ -324,7 +324,7 @@ const TagsMarquee = ({ text }: { text: string }) => (
 );
 
 /** 캐러셀 네비게이션 버튼 */
-const CarouselNav = ({
+export const CarouselNav = ({
   onPrev,
   onNext,
   isAtStart,
@@ -362,7 +362,7 @@ const CarouselNav = ({
 };
 
 /** 히어로 카드 */
-const HeroCard = ({ card }: { card: CardWithKey }) => (
+export const HeroCard = ({ card }: { card: CardWithKey }) => (
   <div
     className="group relative flex-none overflow-hidden rounded-2xl h-full cursor-pointer hero-card"
     data-cursor-hover

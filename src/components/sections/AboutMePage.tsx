@@ -216,7 +216,7 @@ export const AboutMeSection = () => {
             className="relative w-full md:w-[25vw] md:min-w-[24rem] aspect-[295/393] mx-auto md:mx-0"
           >
             <Image
-              src="/about-me-photo-1526fe.png"
+              src="/about-me-3.png"
               alt="Laura Heejoo Kim"
               fill
               className="object-cover"
