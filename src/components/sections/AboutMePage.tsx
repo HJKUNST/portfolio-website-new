@@ -38,8 +38,8 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => (
   </h2>
 );
 
-const SectionSubtitle = ({ children }: { children: React.ReactNode }) => (
-  <h3 className="text-h3-em mb-3" style={subtitleStyle}>
+const SectionSubtitle = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+  <h3 className={`text-h3-em mb-3 ${className}`} style={subtitleStyle}>
     {children}
   </h3>
 );
@@ -190,7 +190,7 @@ export const AboutMeSection = () => {
     <section
       ref={sectionRef}
       className="section-shell max-w-[1280px] mx-auto pb-24 px-5 md:px-10"
-      style={{ background: "#FCFCFC", paddingTop: "160px", paddingBottom: "160px" }}
+      style={{ background: "#FCFCFC", paddingTop: "120px", paddingBottom: "160px" }}
     >
       {/* 1:1 Grid Layout */}
       <div ref={containerRef} className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-start">
@@ -326,7 +326,6 @@ export const AboutMeSection = () => {
             ref={(el) => {
               contentRefs.current[5] = el;
             }}
-            className="pb-40"
           >
             <SectionBody className="whitespace-pre-line">
               {`Making New Stuffs such as...
@@ -336,6 +335,104 @@ export const AboutMeSection = () => {
               Ballet,
               Savoring Performing Arts`}
             </SectionBody>
+          </ContentSection>
+
+          {/* Work Experience Section */}
+          <ContentSection
+            title="Work Experience"
+            ref={(el) => {
+              contentRefs.current[6] = el;
+            }}
+          >
+            <div className="space-y-6">
+              <div>
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 mb-3">
+                  <div>
+                    <a
+                      href="https://eisenfinance.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:opacity-80 transition-opacity"
+                    >
+                      <h3 className="text-h3-em mb-0" style={subtitleStyle}>
+                        Eisen Finance
+                      </h3>
+                    </a>
+                    <SectionBody className="!mt-1 italic">
+                      Product Designer
+                    </SectionBody>
+                  </div>
+                  <SectionBody className="!text-[var(--gray-900)] md:text-right">
+                    Feb 2024 - Present
+                  </SectionBody>
+                </div>
+                <div className="space-y-2">
+                  <SectionBody className="list-disc list-inside">
+                    Eisen is a multichain DEX aggregator on 20+ chains, expanding with V2 to support both CEX and DEX trading, including spot and derivatives. Worked as a solo designer / marketer in the tech-focused defi startup, building every visual materials from zero to one including the dapp experience, landing page which had resulted product growth from $10K to $10M daily.
+                  </SectionBody>
+                </div>
+              </div>
+            </div>
+          </ContentSection>
+
+          {/* Awards Section */}
+          <ContentSection
+            title="Awards"
+            ref={(el) => {
+              contentRefs.current[7] = el;
+            }}
+            className="pb-40"
+          >
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-h3-em mb-1" style={subtitleStyle}>
+                  Korea Stablecoin Hackathon - 2nd Place (Sep 2025)
+                </h3>
+                <SectionBody>
+                  UX for TGIF, KRW-stablecoin hedging protocol
+                </SectionBody>
+              </div>
+              <div>
+                <h3 className="text-h3-em mb-1" style={subtitleStyle}>
+                  Hyperliquid Hackathon - 3rd Place (Sep 2025)
+                </h3>
+                <SectionBody>
+                  UX for HODL Bot, TG-based delta-neutral trading tool
+                </SectionBody>
+              </div>
+              <div>
+                <h3 className="text-h3-em mb-1" style={subtitleStyle}>
+                  Enso Hackathon - 1st Place (Sep 2025)
+                </h3>
+                <SectionBody>
+                  UX/UI for Telegram Trading Bot
+                </SectionBody>
+              </div>
+              <div>
+                <h3 className="text-h3-em mb-1" style={subtitleStyle}>
+                  ETH Seoul Hackathon - 1st Place (Worldcoin Track) (Jun 2023)
+                </h3>
+                <SectionBody>
+                  UX for World Ticket NFT platform
+                </SectionBody>
+              </div>
+              <div>
+                <h3 className="text-h3-em mb-1" style={subtitleStyle}>
+                  ETHCon Korea Hackathon - 5 Track Wins (Sep 2023)
+                </h3>
+                <SectionBody>
+                  UI for Mooyaho, voice-based ZK wallet
+                </SectionBody>
+              </div>
+              <div>
+                <h3 className="text-h3-em mb-1" style={subtitleStyle}>
+                  Seoul Web3 Festival - 2nd Place (Aug 2023)
+                </h3>
+                <SectionBody>
+                  UX for That Voice, phishing prevention solution
+                </SectionBody>
+              </div>
+            </div>
           </ContentSection>
         </div>
       </div>

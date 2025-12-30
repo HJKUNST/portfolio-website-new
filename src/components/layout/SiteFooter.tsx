@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 export const SiteFooter = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const footerText = "Physically based in Seoul, South Korea, but heart's in NYC, London, Hong Kong. Love making/ contemplating interface that sparks between variety.";
+  const footerText = "Physically based in Seoul, S. Korea, but heart's in NYC, LON, HK. Love making/ contemplating interface that sparks between variety.";
 
   useEffect(() => {
     const checkMobile = () => {
