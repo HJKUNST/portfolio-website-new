@@ -83,6 +83,20 @@ export const useTimeline = ({ totalItems, currentIndex, isMobile, onItemClick }:
     }
   }, [currentIndex, isMobile]);
 
+  // Auto-scroll list when hoveredIndex changes (Desktop only) - 카드 hover 시 타임라인 스크롤
+  useEffect(() => {
+    if (isMobile) return;
+    if (hoveredIndex === null) return;
+
+    const list = listContainerRef.current;
+    if (!list) return;
+
+    const hoveredItem = itemRefs.current[hoveredIndex];
+    if (!hoveredItem) return;
+
+    scrollIntoViewIfNeeded(hoveredItem);
+  }, [hoveredIndex, isMobile, scrollIntoViewIfNeeded]);
+
   // 초기 마운트 시 첫 번째 항목으로 스크롤 (Desktop only)
   useEffect(() => {
     if (isMobile) return;

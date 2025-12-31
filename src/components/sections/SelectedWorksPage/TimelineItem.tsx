@@ -26,6 +26,7 @@ const activeTitleStyle = {
   fontWeight: 700,
   letterSpacing: "-0.02em",
   lineHeight: "1.4em",
+  opacity: 1,
 };
 
 const inactiveTitleStyle = {
@@ -35,6 +36,8 @@ const inactiveTitleStyle = {
   letterSpacing: "-0.02em",
   lineHeight: "1.4em",
   color: "var(--gray-900)",
+  opacity: 0.3,
+  transition: "opacity 0.3s ease",
 };
 
 const SectionBody = ({
@@ -56,8 +59,6 @@ export const TimelineItem = forwardRef<HTMLDivElement, TimelineItemProps>(
         ref={ref}
         className={clsx(
           "cursor-pointer text-left",
-          !isMobile && "transition-opacity duration-300",
-          !isMobile && (isActive ? "opacity-100" : "opacity-30"),
           index === 0 && "pt-6"
         )}
         style={{ direction: "ltr" }}
@@ -87,7 +88,7 @@ export const TimelineItem = forwardRef<HTMLDivElement, TimelineItemProps>(
                 className="hover:opacity-80 transition-opacity inline-flex items-center focus:outline-none"
               >
                 <h3
-                  className="text-h3-em !font-medium !mb-0 inline-block"
+                  className="text-h3-em !font-medium !mb-0 inline-block transition-opacity duration-300"
                   style={isActive ? activeTitleStyle : inactiveTitleStyle}
                 >
                   {work.title}
@@ -95,7 +96,7 @@ export const TimelineItem = forwardRef<HTMLDivElement, TimelineItemProps>(
               </a>
             ) : (
               <h3
-                className="text-h3-em !font-medium !mb-0 inline-block"
+                className="text-h3-em !font-medium !mb-0 inline-block transition-opacity duration-300"
                 style={isActive ? activeTitleStyle : inactiveTitleStyle}
               >
                 {work.title}
