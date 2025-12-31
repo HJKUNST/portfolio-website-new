@@ -101,7 +101,7 @@ const works: WorkItem[] = [
   {
     id: "tgif",
     year: "'25",
-    title: "TGIF - Hedging the FX Market",
+    title: "Korea Stablecoin Hackathon Winner: \n TGIF - Hedging the FX Market",
     description:
       "Handled the UX/UI and pitch deck for TGIF, a KRW-stablecoin hedging protocol. It won 2nd place by clearly explaining the product's value proposition to the target market.",
     image: "/tgif.png",
@@ -113,7 +113,7 @@ const works: WorkItem[] = [
   {
     id: "hodl-bot",
     year: "'25",
-    title: "HODL Bot - Unified Trading Assistant",
+    title: "Hyperliquid Hackathon Winner: \n HODL Bot - Unified Trading Assistant",
     description:
       "I designed the UX and created the entire pitch deck for HODL Bot, a Telegram-based delta-neutral trading tool. The project won 3rd place, recognized for its strong market analysis and clear product direction.",
     image: "/hodl.png",
@@ -293,6 +293,7 @@ export const SelectedWorksSection = () => {
   /** 초기 위치 설정 */
   useLayoutEffect(() => {
     if (carouselCards.length > 0 && cardWidth > 0) {
+      setCurrentIndex(0);
       setPositionInstant(0);
     }
   }, [carouselCards.length, cardWidth, setPositionInstant]);
@@ -359,6 +360,30 @@ export const SelectedWorksSection = () => {
       list.scrollTo({ top: targetScroll, behavior: "smooth" });
     }
   }, [currentIndex, isMobile]);
+
+  // 초기 마운트 시 첫 번째 항목으로 스크롤 (Desktop only)
+  useEffect(() => {
+    if (isMobile) return;
+    
+    const list = listContainerRef.current;
+    if (!list) return;
+
+    const firstItem = itemRefs.current[0];
+    if (!firstItem) return;
+
+    // 초기 마운트 시 첫 번째 항목으로 스크롤
+    const listHeight = list.clientHeight;
+    const itemTop = firstItem.offsetTop;
+    const itemHeight = firstItem.offsetHeight;
+    const targetScroll = itemTop - listHeight / 2 + itemHeight / 2;
+
+    // 약간의 지연을 두어 DOM이 완전히 렌더링된 후 스크롤
+    const timeoutId = setTimeout(() => {
+      list.scrollTo({ top: targetScroll, behavior: "auto" });
+    }, 100);
+
+    return () => clearTimeout(timeoutId);
+  }, [isMobile]);
 
   // Page Transition Animation (Same as AboutMePage)
   useEffect(() => {
@@ -429,8 +454,15 @@ export const SelectedWorksSection = () => {
 
     // Work list items animation (Desktop only)
     mm.add("(min-width: 768px)", () => {
-      itemRefs.current.forEach((ref) => {
+      itemRefs.current.forEach((ref, idx) => {
         if (!ref) return;
+        // 첫 번째 항목(idx === 0)은 currentIndex가 0이므로 ScrollTrigger를 적용하지 않음
+        // CSS 클래스의 opacity-100이 적용되도록 함
+        if (idx === 0) {
+          // 첫 번째 항목은 ScrollTrigger 없이 opacity 1로 유지
+          gsap.set(ref, { opacity: 1 });
+          return;
+        }
         gsap.fromTo(
           ref,
           { opacity: 0.2 },
@@ -534,41 +566,43 @@ export const SelectedWorksSection = () => {
                 const isActive = !isMobile && (hoveredIndex !== null ? idx === hoveredIndex : idx === currentIndex);
 
                 // 스크롤하여 항목이 보이도록 하는 함수 (Desktop only)
+                // 실제로 항목이 컨테이너 밖에 있을 때만 스크롤
                 const scrollIntoViewIfNeeded = (element: HTMLDivElement | null) => {
                   if (isMobile || !element || !listContainerRef.current) return;
 
                   const container = listContainerRef.current;
-                  const gsap = getGSAP();
-
                   const containerRect = container.getBoundingClientRect();
                   const elementRect = element.getBoundingClientRect();
 
-                  const padding = 20;
-                  const isAbove = elementRect.top < containerRect.top + padding;
-                  const isBelow = elementRect.bottom > containerRect.bottom - padding;
+                  // 항목이 컨테이너의 가시 영역 안에 완전히 들어있는지 확인
+                  const isFullyVisible = 
+                    elementRect.top >= containerRect.top &&
+                    elementRect.bottom <= containerRect.bottom;
 
-                  if (isAbove || isBelow) {
-                    const elementOffsetTop = element.offsetTop;
-                    const containerHeight = container.clientHeight;
-                    const elementHeight = element.offsetHeight;
+                  // 완전히 보이면 스크롤하지 않음
+                  if (isFullyVisible) return;
 
-                    const targetScrollTop = elementOffsetTop - (containerHeight / 2) + (elementHeight / 2);
-                    const maxScroll = container.scrollHeight - containerHeight;
-                    const clampedScrollTop = Math.max(0, Math.min(targetScrollTop, maxScroll));
+                  const gsap = getGSAP();
+                  const elementOffsetTop = element.offsetTop;
+                  const containerHeight = container.clientHeight;
+                  const elementHeight = element.offsetHeight;
 
-                    if (gsap && !prefersReducedMotion()) {
-                      gsap.to(container, {
-                        scrollTop: clampedScrollTop,
-                        duration: 0.5,
-                        ease: "power2.out",
-                        overwrite: true,
-                      });
-                    } else {
-                      container.scrollTo({
-                        top: clampedScrollTop,
-                        behavior: "smooth",
-                      });
-                    }
+                  const targetScrollTop = elementOffsetTop - (containerHeight / 2) + (elementHeight / 2);
+                  const maxScroll = container.scrollHeight - containerHeight;
+                  const clampedScrollTop = Math.max(0, Math.min(targetScrollTop, maxScroll));
+
+                  if (gsap && !prefersReducedMotion()) {
+                    gsap.to(container, {
+                      scrollTop: clampedScrollTop,
+                      duration: 0.5,
+                      ease: "power2.out",
+                      overwrite: true,
+                    });
+                  } else {
+                    container.scrollTo({
+                      top: clampedScrollTop,
+                      behavior: "smooth",
+                    });
                   }
                 };
 
@@ -581,7 +615,8 @@ export const SelectedWorksSection = () => {
                     className={clsx(
                       "cursor-pointer text-left",
                       !isMobile && "transition-opacity duration-300",
-                      !isMobile && (isActive ? "opacity-100" : "opacity-30")
+                      !isMobile && (isActive ? "opacity-100" : "opacity-30"),
+                      idx === 0 && "pt-6"
                     )}
                     style={{ direction: "ltr" }}
                     onClick={() => {
