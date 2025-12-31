@@ -280,7 +280,7 @@ export const AboutMeSection = () => {
             }}
           >
             <SectionBody>
-              Hi, I'm Laura, a Product Designer working at the intersection of design, engineering, and finance. I specialize in taking complex trading logic and multi-chain systems and shaping them into interfaces that feel clear, trustworthy, and usable. My experience spans both on-chain and CEX trading products, system modeling, and data-informed iteration across web3 applications.
+              Hi, I&apos;m Laura, a Product Designer working at the intersection of design, engineering, and finance. I specialize in taking complex trading logic and multi-chain systems and shaping them into interfaces that feel clear, trustworthy, and usable. My experience spans both on-chain and CEX trading products, system modeling, and data-informed iteration across web3 applications.
             </SectionBody>
           </ContentSection>
 
@@ -299,7 +299,7 @@ export const AboutMeSection = () => {
                 </SectionBody>
               </div>
               <div>
-                <SectionSubtitle>Giving Shape to What's Not Yet Defined</SectionSubtitle>
+                <SectionSubtitle>Giving Shape to What&apos;s Not Yet Defined</SectionSubtitle>
                 <SectionBody>
                   Undefined, technically dense products are the fun ones. Information architecture, states, and edge cases come before UI. The work is about giving systems a shape people can recognize, use, and trust.
                 </SectionBody>
@@ -308,7 +308,7 @@ export const AboutMeSection = () => {
               <div>
                 <SectionSubtitle>Build, Craft, and Refine with Rigor</SectionSubtitle>
                 <SectionBody>
-                  Assumptions don't scale—data does. Analytics and dashboards guide iteration, not gut feeling. Technical architecture gets translated across interfaces, decks, and brand assets, keeping the story consistent from protocol to pixel.
+                  Assumptions don&apos;t scale—data does. Analytics and dashboards guide iteration, not gut feeling. Technical architecture gets translated across interfaces, decks, and brand assets, keeping the story consistent from protocol to pixel.
                 </SectionBody>
               </div>
             </div>
