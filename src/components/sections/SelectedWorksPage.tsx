@@ -30,19 +30,16 @@ const subtitleStyle = {
 };
 
 // Reusable Components
-const SectionSubtitle = ({
-  children,
-  className = "",
-  style = {},
-}: {
+const SectionSubtitle = forwardRef<HTMLHeadingElement, {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
-}) => (
-  <h3 className={`text-h3-em mb-3 ${className}`} style={{ ...subtitleStyle, ...style }}>
+}>(({ children, className = "", style = {} }, ref) => (
+  <h3 ref={ref} className={`text-h3-em mb-3 ${className}`} style={{ ...subtitleStyle, ...style }}>
     {children}
   </h3>
-);
+));
+SectionSubtitle.displayName = "SectionSubtitle";
 
 const SectionBody = ({
   children,
@@ -106,12 +103,12 @@ const works: WorkItem[] = [
     year: "'25",
     title: "TGIF - Hedging the FX Market",
     description:
-      "I handled the full UX/UI and pitch deck for TGIF, a KRW-stablecoin hedging protocol. The project won 2nd place by clearly explaining the product's value and features to the target market.",
+      "Handled the UX/UI and pitch deck for TGIF, a KRW-stablecoin hedging protocol. It won 2nd place by clearly explaining the product's value proposition to the target market.",
     image: "/tgif.png",
     tags: ["UI", "Brand Experience", "Pitch Deck"],
     subtitle: "KRW native stables to hedge FX risk",
-    websiteLink: undefined,
-    portfolioLink: undefined,
+    websiteLink: "https://kaia-tgif.vercel.app/",
+    portfolioLink: "https://drive.google.com/file/d/1JTIhrKcO72kpZVh0zfVRopRDPfOtLt54/view?usp=sharing",
   },
   {
     id: "hodl-bot",
@@ -122,8 +119,8 @@ const works: WorkItem[] = [
     image: "/hodl.png",
     tags: ["User Experience", "Brand Experience", "Pitch Deck"],
     subtitle: "Telegram based delta-neutral trading bot",
-    websiteLink: undefined,
-    portfolioLink: undefined,
+    websiteLink: "https://t.me/hl_awesome_bot",
+    portfolioLink: "https://layers.to/layers/cmg7j8z480008ky09owycshwp-hodl-bot-unified-telegram-trading-risk-management",
   },
   {
     id: "placeholder",
@@ -144,6 +141,13 @@ export const SelectedWorksSection = () => {
   // Navigation State
   const [currentIndex, setCurrentIndex] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  // Section Refs for Animation
+  const sectionRef = useRef<HTMLElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const descriptionRef = useRef<HTMLParagraphElement>(null);
+  const timelineSubtitleRef = useRef<HTMLHeadingElement>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   // Carousel Refs & State
   const containerRef = useRef<HTMLDivElement>(null);
@@ -356,8 +360,127 @@ export const SelectedWorksSection = () => {
     }
   }, [currentIndex, isMobile]);
 
+  // Page Transition Animation (Same as AboutMePage)
+  useEffect(() => {
+    if (prefersReducedMotion()) return;
+    if (!sectionRef.current) return;
+
+    const gsap = getGSAP();
+    if (!gsap || !ScrollTrigger) return;
+
+    const mm = gsap.matchMedia();
+
+    // Title animation
+    if (titleRef.current) {
+      gsap.fromTo(
+        titleRef.current,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: titleRef.current,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+    }
+
+    // Description animation
+    if (descriptionRef.current) {
+      gsap.fromTo(
+        descriptionRef.current,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: descriptionRef.current,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+    }
+
+    // Timeline subtitle animation
+    if (timelineSubtitleRef.current) {
+      gsap.fromTo(
+        timelineSubtitleRef.current,
+        { opacity: 0.2 },
+        {
+          opacity: 1,
+          duration: 0.5,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: timelineSubtitleRef.current,
+            start: "top 70%",
+            end: "bottom 30%",
+            toggleActions: "play reverse play reverse",
+          },
+        }
+      );
+    }
+
+    // Work list items animation (Desktop only)
+    mm.add("(min-width: 768px)", () => {
+      itemRefs.current.forEach((ref) => {
+        if (!ref) return;
+        gsap.fromTo(
+          ref,
+          { opacity: 0.2 },
+          {
+            opacity: 1,
+            duration: 0.5,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: ref,
+              start: "top 70%",
+              end: "bottom 30%",
+              toggleActions: "play reverse play reverse",
+            },
+          }
+        );
+      });
+    });
+
+    // Carousel section animation
+    if (carouselRef.current) {
+      gsap.fromTo(
+        carouselRef.current,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: carouselRef.current,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+    }
+
+    return () => {
+      mm.revert();
+      ScrollTrigger.getAll().forEach((trigger) => {
+        if (trigger.vars?.trigger && itemRefs.current.includes(trigger.vars.trigger as HTMLDivElement)) {
+          trigger.kill();
+        }
+      });
+    };
+  }, []);
+
   return (
     <section
+      ref={sectionRef}
       className="section-shell max-w-[1280px] mx-auto pb-24 px-5 md:px-10 flex flex-col gap-4"
       style={{ background: "#FCFCFC", paddingTop: "120px" }}
     >
@@ -365,10 +488,11 @@ export const SelectedWorksSection = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-24 items-start">
         {/* Left: Title & Description */}
         <div>
-          <h1 className="text-h1-gradient mb-4" style={TitleStyle}>
+          <h1 ref={titleRef} className="text-h1-gradient mb-4" style={TitleStyle}>
             Selected Works
           </h1>
           <p
+            ref={descriptionRef}
             className="text-em"
             style={{
               ...BodyStyle,
@@ -383,6 +507,7 @@ export const SelectedWorksSection = () => {
         <div className="md:text-right md:flex md:flex-col md:items-end">
           <div className="relative mb-8">
             <SectionSubtitle
+              ref={timelineSubtitleRef}
               className="text-left !text-h3-em my-12"
               style={{
                 background: "var(--main-gradient)",
@@ -482,7 +607,7 @@ export const SelectedWorksSection = () => {
                       }
                     }}
                   >
-                    <div className="flex gap-3 mb-3 items-center">
+                    <div className="flex gap-3 mb-3 items-start">
                       <span
                         className="text-em"
                         style={{
@@ -615,7 +740,7 @@ export const SelectedWorksSection = () => {
       </div>
 
       {/* Bottom Section: Carousel */}
-      <div className="flex flex-col">
+      <div ref={carouselRef} className="flex flex-col">
         <div
           ref={containerRef}
           className="relative overflow-hidden w-full aspect-[4/3] md:aspect-auto md:h-[min(40vh,640px)]"

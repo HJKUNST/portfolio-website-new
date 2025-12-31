@@ -237,3 +237,22 @@ img {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #85ADAF;
 }
+
+/* Photo blur effect */
+.photo-blur-image {
+  transition: filter 0.5s ease, outline 0.5s ease, opacity 0.5s ease;
+  outline: 2px solid transparent;
+  outline-offset: 4px;
+}
+
+/* Preview image (blurred) */
+.photo-blur-container:not(:has(img[src*="about-me-3"])) .photo-blur-image {
+  filter: blur(12px);
+}
+
+/* Actual image (clear) - when hovered or clicked */
+.photo-blur-container:has(img[src*="about-me-3"]) .photo-blur-image {
+  filter: blur(0) !important;
+  outline: 2px solid var(--gray-900);
+  outline-offset: 4px;
+}

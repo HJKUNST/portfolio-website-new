@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, forwardRef } from "react";
+import { useEffect, useRef, forwardRef, useState } from "react";
 import { getGSAP, ScrollTrigger } from "@/lib/motion/gsap";
 import { prefersReducedMotion } from "@/lib/motion/constants";
+import { ArrowUpIcon } from "@radix-ui/react-icons";
 
 const TitleStyle = {
   fontFamily: "var(--font-manrope), Manrope, sans-serif",
@@ -85,6 +86,18 @@ export const AboutMeSection = () => {
   const leftColRef = useRef<HTMLDivElement>(null);
   const rightColRef = useRef<HTMLDivElement>(null);
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     if (prefersReducedMotion()) return;
@@ -213,15 +226,47 @@ export const AboutMeSection = () => {
             ref={(el) => {
               contentRefs.current[0] = el;
             }}
-            className="relative w-full md:w-[25vw] md:min-w-[24rem] aspect-[295/393] mx-auto md:mx-0"
+            className="relative w-full md:w-[25vw] md:min-w-[24rem] mx-auto md:mx-0 group"
           >
-            <Image
-              src="/about-me-3.png"
-              alt="Laura Heejoo Kim"
-              fill
-              className="object-cover"
-              priority
-            />
+            <div 
+              className="relative aspect-[295/393] overflow-hidden photo-blur-container"
+              onMouseEnter={() => !isMobile && setIsHovered(true)}
+              onMouseLeave={() => !isMobile && setIsHovered(false)}
+              onClick={() => isMobile && setIsHovered(!isHovered)}
+            >
+              {/* Preview image (always visible, blurred) */}
+              <Image
+                src="/about-me-prev.png"
+                alt="Laura Heejoo Kim"
+                fill
+                className="object-cover photo-blur-image"
+                style={{
+                  filter: 'blur(12px)',
+                  opacity: isHovered ? 0 : 1,
+                  transition: 'opacity 0.5s ease, filter 0.5s ease, outline 0.5s ease',
+                }}
+                priority
+              />
+              {/* Actual image (fades in on hover) */}
+              <Image
+                src="/about-me-3.png"
+                alt="Laura Heejoo Kim"
+                fill
+                className="object-cover photo-blur-image"
+                style={{
+                  filter: 'blur(0)',
+                  opacity: isHovered ? 1 : 0,
+                  outline: isHovered ? '2px solid var(--gray-900)' : '2px solid transparent',
+                  outlineOffset: '4px',
+                  transition: 'opacity 0.5s ease, filter 0.5s ease, outline 0.5s ease',
+                }}
+                priority
+              />
+            </div>
+            <p className="flex items-center justify-center gap-2 mt-4 text-sm opacity-60 group-hover:opacity-100 transition-opacity duration-500">
+              <ArrowUpIcon className="w-4 h-4" />
+              {isMobile ? "Tap Here" : "Hover Here"}
+            </p>
           </div>
         </div>
 
@@ -264,6 +309,103 @@ export const AboutMeSection = () => {
                 <SectionSubtitle>Build, Craft, and Refine with Rigor</SectionSubtitle>
                 <SectionBody>
                   Assumptions don't scale—data does. Analytics and dashboards guide iteration, not gut feeling. Technical architecture gets translated across interfaces, decks, and brand assets, keeping the story consistent from protocol to pixel.
+                </SectionBody>
+              </div>
+            </div>
+          </ContentSection>
+
+          {/* Work Experience Section */}
+          <ContentSection
+            title="Work Experience"
+            ref={(el) => {
+              contentRefs.current[6] = el;
+            }}
+          >
+            <div className="space-y-6">
+              <div>
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 mb-3">
+                  <div>
+                    <a
+                      href="https://eisenfinance.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:opacity-80 transition-opacity"
+                    >
+                      <h3 className="text-h3-em mb-0" style={subtitleStyle}>
+                        Eisen Finance
+                      </h3>
+                    </a>
+                    <SectionBody className="!mt-1 italic">
+                      Product Designer
+                    </SectionBody>
+                  </div>
+                  <SectionBody className="!text-[var(--gray-300)] md:text-right">
+                    Feb 2024 - Dec 2025 (2 years)
+                  </SectionBody>
+                </div>
+                <div className="space-y-2">
+                  <SectionBody className="list-disc list-inside">
+                    Eisen is a multichain DEX aggregator on 20+ chains, expanding with V2 to support both CEX and DEX trading, including spot and derivatives. Worked as a solo designer / marketer in the tech-focused defi startup, building every visual materials from zero to one including the dapp experience, landing page which had resulted product growth from $10K to $10M daily.
+                  </SectionBody>
+                </div>
+              </div>
+            </div>
+          </ContentSection>
+
+          {/* Awards Section */}
+          <ContentSection
+            title="Awards"
+            ref={(el) => {
+              contentRefs.current[7] = el;
+            }}
+          >
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-h3-em mb-1" style={subtitleStyle}>
+                  Korea Stablecoin Hackathon - 2nd Place (Sep 2025)
+                </h3>
+                <SectionBody>
+                  UX for TGIF, KRW-stablecoin hedging protocol
+                </SectionBody>
+              </div>
+              <div>
+                <h3 className="text-h3-em mb-1" style={subtitleStyle}>
+                  Hyperliquid Hackathon - 3rd Place (Sep 2025)
+                </h3>
+                <SectionBody>
+                  UX for HODL Bot, TG-based delta-neutral trading tool
+                </SectionBody>
+              </div>
+              <div>
+                <h3 className="text-h3-em mb-1" style={subtitleStyle}>
+                  Enso Hackathon - 1st Place (Sep 2025)
+                </h3>
+                <SectionBody>
+                  UX/UI for Telegram Trading Bot
+                </SectionBody>
+              </div>
+              <div>
+                <h3 className="text-h3-em mb-1" style={subtitleStyle}>
+                  ETH Seoul Hackathon - 1st Place (Worldcoin Track) (Jun 2023)
+                </h3>
+                <SectionBody>
+                  UX for World Ticket NFT platform
+                </SectionBody>
+              </div>
+              <div>
+                <h3 className="text-h3-em mb-1" style={subtitleStyle}>
+                  ETHCon Korea Hackathon - 5 Track Wins (Sep 2023)
+                </h3>
+                <SectionBody>
+                  UI for Mooyaho, voice-based ZK wallet
+                </SectionBody>
+              </div>
+              <div>
+                <h3 className="text-h3-em mb-1" style={subtitleStyle}>
+                  Seoul Web3 Festival - 2nd Place (Aug 2023)
+                </h3>
+                <SectionBody>
+                  UX for That Voice, phishing prevention solution
                 </SectionBody>
               </div>
             </div>
@@ -335,104 +477,6 @@ export const AboutMeSection = () => {
               Ballet,
               Savoring Performing Arts`}
             </SectionBody>
-          </ContentSection>
-
-          {/* Work Experience Section */}
-          <ContentSection
-            title="Work Experience"
-            ref={(el) => {
-              contentRefs.current[6] = el;
-            }}
-          >
-            <div className="space-y-6">
-              <div>
-                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 mb-3">
-                  <div>
-                    <a
-                      href="https://eisenfinance.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:opacity-80 transition-opacity"
-                    >
-                      <h3 className="text-h3-em mb-0" style={subtitleStyle}>
-                        Eisen Finance
-                      </h3>
-                    </a>
-                    <SectionBody className="!mt-1 italic">
-                      Product Designer
-                    </SectionBody>
-                  </div>
-                  <SectionBody className="!text-[var(--gray-900)] md:text-right">
-                    Feb 2024 - Present
-                  </SectionBody>
-                </div>
-                <div className="space-y-2">
-                  <SectionBody className="list-disc list-inside">
-                    Eisen is a multichain DEX aggregator on 20+ chains, expanding with V2 to support both CEX and DEX trading, including spot and derivatives. Worked as a solo designer / marketer in the tech-focused defi startup, building every visual materials from zero to one including the dapp experience, landing page which had resulted product growth from $10K to $10M daily.
-                  </SectionBody>
-                </div>
-              </div>
-            </div>
-          </ContentSection>
-
-          {/* Awards Section */}
-          <ContentSection
-            title="Awards"
-            ref={(el) => {
-              contentRefs.current[7] = el;
-            }}
-            className="pb-40"
-          >
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-h3-em mb-1" style={subtitleStyle}>
-                  Korea Stablecoin Hackathon - 2nd Place (Sep 2025)
-                </h3>
-                <SectionBody>
-                  UX for TGIF, KRW-stablecoin hedging protocol
-                </SectionBody>
-              </div>
-              <div>
-                <h3 className="text-h3-em mb-1" style={subtitleStyle}>
-                  Hyperliquid Hackathon - 3rd Place (Sep 2025)
-                </h3>
-                <SectionBody>
-                  UX for HODL Bot, TG-based delta-neutral trading tool
-                </SectionBody>
-              </div>
-              <div>
-                <h3 className="text-h3-em mb-1" style={subtitleStyle}>
-                  Enso Hackathon - 1st Place (Sep 2025)
-                </h3>
-                <SectionBody>
-                  UX/UI for Telegram Trading Bot
-                </SectionBody>
-              </div>
-              <div>
-                <h3 className="text-h3-em mb-1" style={subtitleStyle}>
-                  ETH Seoul Hackathon - 1st Place (Worldcoin Track) (Jun 2023)
-                </h3>
-                <SectionBody>
-                  UX for World Ticket NFT platform
-                </SectionBody>
-              </div>
-              <div>
-                <h3 className="text-h3-em mb-1" style={subtitleStyle}>
-                  ETHCon Korea Hackathon - 5 Track Wins (Sep 2023)
-                </h3>
-                <SectionBody>
-                  UI for Mooyaho, voice-based ZK wallet
-                </SectionBody>
-              </div>
-              <div>
-                <h3 className="text-h3-em mb-1" style={subtitleStyle}>
-                  Seoul Web3 Festival - 2nd Place (Aug 2023)
-                </h3>
-                <SectionBody>
-                  UX for That Voice, phishing prevention solution
-                </SectionBody>
-              </div>
-            </div>
           </ContentSection>
         </div>
       </div>
