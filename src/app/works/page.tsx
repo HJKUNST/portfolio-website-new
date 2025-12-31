@@ -3,7 +3,7 @@
 import { SmoothScrollProvider } from "@/components/SmoothScrollProvider";
 import { SiteNav } from "@/components/layout/SiteNav";
 import { SiteFooter } from "@/components/layout/SiteFooter";
-import { SelectedWorksSection } from "@/components/sections/SelectedWorksPage";
+import { SelectedWorksSection } from "@/components/sections/SelectedWorksPage/SelectedWorksSection";
 
 export default function WorksPage() {
   return (
