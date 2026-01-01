@@ -9,7 +9,6 @@ interface TimelineItemProps {
   work: WorkItem;
   index: number;
   isActive: boolean;
-  isMobile: boolean;
   onClick: () => void;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
@@ -53,7 +52,7 @@ const SectionBody = ({
 );
 
 export const TimelineItem = forwardRef<HTMLDivElement, TimelineItemProps>(
-  ({ work, index, isActive, isMobile, onClick, onMouseEnter, onMouseLeave, onFocus }, ref) => {
+  ({ work, index, isActive, onClick, onMouseEnter, onMouseLeave, onFocus }, ref) => {
     return (
       <div
         ref={ref}

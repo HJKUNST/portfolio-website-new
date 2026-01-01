@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useMemo, useCallback, useState } from "react";
-import { HeroCard, CarouselNav, CardWithKey } from "../HeroSection";
+import { CarouselNav, CardWithKey } from "../HeroSection";
 import { works } from "@/lib/works/data";
 import { WorkItem } from "@/lib/works/types";
 import { TitleStyle, BodyStyle } from "@/lib/works/constants";
@@ -66,7 +66,6 @@ export const SelectedWorksSection = () => {
 
   // Timeline Hook
   const {
-    hoveredIndex,
     setHoveredIndex,
     listContainerRef,
     itemRefs,

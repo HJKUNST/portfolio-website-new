@@ -10,6 +10,7 @@ interface UseCarouselProps {
 
 export const useCarousel = ({ totalCards, isMobile }: UseCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const isInitializedRef = useRef(false);
   const [cardWidth, setCardWidth] = useState(0);
   const [containerWidth, setContainerWidth] = useState(0);
   const [isDesktop, setIsDesktop] = useState(false);
@@ -117,7 +118,8 @@ export const useCarousel = ({ totalCards, isMobile }: UseCarouselProps) => {
 
   // 초기 위치 설정
   useLayoutEffect(() => {
-    if (totalCards > 0 && cardWidth > 0) {
+    if (totalCards > 0 && cardWidth > 0 && !isInitializedRef.current) {
+      isInitializedRef.current = true;
       setCurrentIndex(0);
       setPositionInstant(0);
     }

@@ -1,6 +1,5 @@
 "use client";
 
-import { useRef } from "react";
 import { HeroCard, CardWithKey } from "../HeroSection";
 import { WorkItem } from "@/lib/works/types";
 import { CAROUSEL_GAP } from "@/lib/works/constants";

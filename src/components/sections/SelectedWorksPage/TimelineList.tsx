@@ -31,7 +31,7 @@ export const TimelineList = forwardRef<HTMLDivElement, TimelineListProps>(
     onItemMouseLeave,
     onItemFocus,
     timelineSubtitleRef,
-  }, _ref) => {
+  }) => {
     return (
       <div className="relative mb-8">
         <SectionSubtitle
@@ -68,7 +68,6 @@ export const TimelineList = forwardRef<HTMLDivElement, TimelineListProps>(
               work={work}
               index={idx}
               isActive={getIsActive(idx)}
-              isMobile={isMobile}
               onClick={() => onItemClick(idx)}
               onMouseEnter={() => onItemMouseEnter(idx)}
               onMouseLeave={onItemMouseLeave}
