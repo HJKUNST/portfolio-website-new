@@ -29,27 +29,18 @@ const FocusIcon = () => (
 export const CursorProvider = () => {
   const pathname = usePathname();
 
-  // About 페이지에서는 클릭 가능한 요소(링크, 버튼)에만 커서 확대 적용
-  // 메인 페이지에서는 모든 링크, 버튼, 카드 등에 적용
+  // 메인 페이지: 기존 설정 유지
   const hoverSelectors = useMemo(() => {
-    if (pathname === "/about") {
-      // About 페이지: 네비게이션과 푸터의 링크만
-      return ["header a", "footer a", "[data-cursor-hover]", "[data-cursor-focus]", "button"];
-    }
-    // 메인 페이지: 기존 설정 유지
     return [".card-shell", "[data-cursor-hover]", "[data-cursor-focus]", "a", "button"];
-  }, [pathname]);
+  }, []);
 
   const selectorIcons = useMemo(() => new Map([
     ["[data-cursor-hover]", <ExternalLinkIcon key="external" />],
     ["[data-cursor-focus]", <FocusIcon key="focus" />],
   ]), []);
 
-  // About 페이지에서는 mix-blend-difference 비활성화
-  const useBlendDifference = pathname !== "/about";
-
-  // About 페이지에서는 Custom Cursor 숨김 (Trail만 표시)
-  if (pathname === "/about") return null;
+  // mix-blend-difference 항상 활성화
+  const useBlendDifference = true;
 
   return (
     <CustomCursor

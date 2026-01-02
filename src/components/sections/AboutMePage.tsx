@@ -207,7 +207,7 @@ export const AboutMeSection = () => {
       style={{ background: "#FCFCFC", paddingTop: "120px", paddingBottom: "160px" }}
     >
       {/* 1:1 Grid Layout */}
-      <CursorTrail />
+      {/* <CursorTrail /> */}
       <div ref={containerRef} className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-start">
         {/* Left Column: Title + Photo */}
         <div
