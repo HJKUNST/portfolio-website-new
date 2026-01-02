@@ -47,10 +47,13 @@ export const CustomCursor = ({
     const xTo = gsap.quickTo(cursor, "x", { duration: 0.6, ease: "power3" });
     const yTo = gsap.quickTo(cursor, "y", { duration: 0.6, ease: "power3" });
 
+    // 초기화: props 변경 시 스케일/상태 리셋
+    gsap.to(cursor, { scale: 1, duration: 0 });
+
     // 색상 정의
-    const BLUE = { r: 141, g: 195, b: 198 };
-    const RED = { r: 253, g: 154, b: 109 };
-    const GRAY = { r: 220, g: 220, b: 220 };
+    const BLUE = useBlendDifference ? { r: 141, g: 195, b: 198 } : { r: 11, g: 11, b: 11 };
+    const RED = useBlendDifference ? { r: 253, g: 154, b: 109 } : { r: 11, g: 11, b: 11 };
+    const GRAY = useBlendDifference ? { r: 220, g: 220, b: 220 } : { r: 141, g: 141, b: 141 };
 
     // 현재 색상 상태 (RGB)
     const currentColorObj = { ...BLUE };
@@ -191,7 +194,7 @@ export const CustomCursor = ({
       if (movementTimeout) clearTimeout(movementTimeout);
       if (colorTween) colorTween.kill();
     };
-  }, [hoverSelectors, hoverScale]);
+  }, [hoverSelectors, hoverScale, useBlendDifference]);
 
   return (
     <div

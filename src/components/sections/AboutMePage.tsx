@@ -5,6 +5,7 @@ import { useEffect, useRef, forwardRef, useState } from "react";
 import { getGSAP, ScrollTrigger } from "@/lib/motion/gsap";
 import { prefersReducedMotion } from "@/lib/motion/constants";
 import { ArrowUpIcon } from "@radix-ui/react-icons";
+import { CursorTrail } from "@/components/CursorTrail";
 
 const TitleStyle = {
   fontFamily: "var(--font-manrope), Manrope, sans-serif",
@@ -206,6 +207,7 @@ export const AboutMeSection = () => {
       style={{ background: "#FCFCFC", paddingTop: "120px", paddingBottom: "160px" }}
     >
       {/* 1:1 Grid Layout */}
+      <CursorTrail />
       <div ref={containerRef} className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-start">
         {/* Left Column: Title + Photo */}
         <div
@@ -228,7 +230,7 @@ export const AboutMeSection = () => {
             }}
             className="relative w-full md:w-[25vw] md:min-w-[24rem] mx-auto md:mx-0 group"
           >
-            <div 
+            <div
               className="relative aspect-[295/393] overflow-hidden photo-blur-container"
               onMouseEnter={() => !isMobile && setIsHovered(true)}
               onMouseLeave={() => !isMobile && setIsHovered(false)}

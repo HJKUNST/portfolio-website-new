@@ -28,7 +28,7 @@ const FocusIcon = () => (
 
 export const CursorProvider = () => {
   const pathname = usePathname();
-  
+
   // About 페이지에서는 클릭 가능한 요소(링크, 버튼)에만 커서 확대 적용
   // 메인 페이지에서는 모든 링크, 버튼, 카드 등에 적용
   const hoverSelectors = useMemo(() => {
@@ -47,6 +47,9 @@ export const CursorProvider = () => {
 
   // About 페이지에서는 mix-blend-difference 비활성화
   const useBlendDifference = pathname !== "/about";
+
+  // About 페이지에서는 Custom Cursor 숨김 (Trail만 표시)
+  if (pathname === "/about") return null;
 
   return (
     <CustomCursor

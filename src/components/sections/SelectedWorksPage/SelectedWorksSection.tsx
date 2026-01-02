@@ -94,8 +94,12 @@ export const SelectedWorksSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="section-shell max-w-[1280px] mx-auto pb-24 px-5 md:px-10 flex flex-col gap-4"
-      style={{ background: "#FCFCFC", paddingTop: "120px" }}
+      className="section-shell max-w-[1280px] mx-auto pb-24 px-5 md:px-10 flex flex-col"
+      style={{ 
+        background: "#FCFCFC", 
+        paddingTop: "120px",
+        gap: "clamp(32px, 8vw, 80px)"
+      }}
     >
       {/* Top Section: Split Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-24 items-start">

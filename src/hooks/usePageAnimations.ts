@@ -68,9 +68,10 @@ export const usePageAnimations = ({
 
     // Timeline subtitle animation
     if (timelineSubtitleRef.current) {
+      gsap.set(timelineSubtitleRef.current, { opacity: 1 });
       gsap.fromTo(
         timelineSubtitleRef.current,
-        { opacity: 0.2 },
+        { opacity: 1 },
         {
           opacity: 1,
           duration: 0.5,
@@ -96,7 +97,7 @@ export const usePageAnimations = ({
         }
         gsap.fromTo(
           ref,
-          { opacity: 0.2 },
+          { opacity: 1 },
           {
             opacity: 1,
             duration: 0.5,

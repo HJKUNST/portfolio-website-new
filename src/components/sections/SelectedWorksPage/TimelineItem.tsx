@@ -16,7 +16,7 @@ interface TimelineItemProps {
 }
 
 const activeTitleStyle = {
-  background: "var(--main-gradient)",
+  background: "var(--primary)",
   WebkitBackgroundClip: "text",
   backgroundClip: "text",
   color: "transparent",
@@ -26,6 +26,7 @@ const activeTitleStyle = {
   letterSpacing: "-0.02em",
   lineHeight: "1.4em",
   opacity: 1,
+  fontStyle: "underline",
 };
 
 const inactiveTitleStyle = {
@@ -35,7 +36,7 @@ const inactiveTitleStyle = {
   letterSpacing: "-0.02em",
   lineHeight: "1.4em",
   color: "var(--gray-900)",
-  opacity: 0.3,
+  opacity: 1,
   transition: "opacity 0.3s ease",
 };
 
@@ -66,7 +67,7 @@ export const TimelineItem = forwardRef<HTMLDivElement, TimelineItemProps>(
         onMouseLeave={onMouseLeave}
         onFocus={onFocus}
       >
-        <div className="flex gap-3 mb-3 items-start">
+        <div className="flex gap-3 mb-1 items-start">
           <span
             className="text-em"
             style={{

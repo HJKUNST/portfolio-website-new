@@ -50,11 +50,12 @@ export const TimelineList = forwardRef<HTMLDivElement, TimelineListProps>(
           ref={listContainerRef}
           className={clsx(
             "gap-12 grid justify-end pl-4 pr-4",
-            isMobile ? "" : "overflow-y-auto max-h-[320px] custom-scrollbar"
+            isMobile ? "" : "overflow-y-auto custom-scrollbar"
           )}
           style={{
             direction: "rtl",
             scrollbarGutter: isMobile ? "auto" : "stable",
+            maxHeight: isMobile ? "auto" : "clamp(400px, 36vh, 600px)",
           }}
         >
           {works.map((work, idx) => (
