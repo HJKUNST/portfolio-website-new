@@ -48,6 +48,7 @@ export const CursorProvider = () => {
       hoverIcon={<ExternalLinkIcon />}
       selectorIcons={selectorIcons}
       useBlendDifference={useBlendDifference}
+      pathname={pathname}
     />
   );
 };

@@ -15,6 +15,8 @@ type CustomCursorProps = {
   selectorIcons?: Map<string, string | React.ReactNode>;
   /** mix-blend-difference 적용 여부 (기본값: true) */
   useBlendDifference?: boolean;
+  /** 경로 변경 시 상태 리셋을 위한 key */
+  pathname?: string;
 };
 
 export const CustomCursor = ({
@@ -23,6 +25,7 @@ export const CustomCursor = ({
   hoverIcon,
   selectorIcons,
   useBlendDifference = true,
+  pathname,
 }: CustomCursorProps) => {
   // 더 큰 캔버스에 그리고 축소해두면 확대 시에도 깨짐이 줄어듭니다.
   const BASE_CURSOR_SIZE = 128;
@@ -47,12 +50,9 @@ export const CustomCursor = ({
     const xTo = gsap.quickTo(cursor, "x", { duration: 0.6, ease: "power3" });
     const yTo = gsap.quickTo(cursor, "y", { duration: 0.6, ease: "power3" });
 
-    // 초기화: props 변경 시 스케일/상태 리셋
-    gsap.to(cursor, { scale: 1, duration: 0 });
-
     // 색상 정의
     const BLUE = useBlendDifference ? { r: 141, g: 195, b: 198 } : { r: 11, g: 11, b: 11 };
-    const RED = useBlendDifference ? { r: 253, g: 154, b: 109 } : { r: 11, g: 11, b: 11 };
+    const PRIMARY_BRIGHT = useBlendDifference ? { r: 0, g: 221, b: 221 } : { r: 11, g: 11, b: 11 };
     const GRAY = useBlendDifference ? { r: 220, g: 220, b: 220 } : { r: 141, g: 141, b: 141 };
 
     // 현재 색상 상태 (RGB)
@@ -63,6 +63,21 @@ export const CustomCursor = ({
     let isHovering = false;
     let isMoving = false;
 
+    // 초기화: props 변경 시 스케일/상태 리셋
+    // 페이지 전환 시 hover 상태를 강제로 리셋
+    const resetCursorState = () => {
+      isHovering = false;
+      isMoving = false;
+      gsap.to(cursor, { scale: 1, duration: 0.2, ease: "power2.out" });
+      // 색상을 기본값으로 리셋
+      if (colorTween) colorTween.kill();
+      Object.assign(currentColorObj, BLUE);
+      setCursorColor(`rgba(${BLUE.r}, ${BLUE.g}, ${BLUE.b}, 1)`);
+    };
+
+    // 초기 상태 리셋
+    resetCursorState();
+
     // 색상 업데이트 함수
     const updateCursorColor = () => {
       let target = BLUE;
@@ -72,7 +87,7 @@ export const CustomCursor = ({
       }
       // 그 다음이 움직임
       else if (isMoving) {
-        target = RED;
+        target = PRIMARY_BRIGHT;
       }
       // 아무것도 아니면 BLUE (기본)
 
@@ -194,7 +209,7 @@ export const CustomCursor = ({
       if (movementTimeout) clearTimeout(movementTimeout);
       if (colorTween) colorTween.kill();
     };
-  }, [hoverSelectors, hoverScale, useBlendDifference]);
+  }, [hoverSelectors, hoverScale, useBlendDifference, pathname]);
 
   return (
     <div
