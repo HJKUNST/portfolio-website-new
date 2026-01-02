@@ -120,7 +120,7 @@ export const useCarousel = ({ totalCards, isMobile }: UseCarouselProps) => {
   useLayoutEffect(() => {
     if (totalCards > 0 && cardWidth > 0 && !isInitializedRef.current) {
       isInitializedRef.current = true;
-      setCurrentIndex(0);
+      isInitializedRef.current = true;
       setPositionInstant(0);
     }
   }, [totalCards, cardWidth, setPositionInstant]);

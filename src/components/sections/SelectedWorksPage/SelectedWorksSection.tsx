@@ -75,7 +75,6 @@ export const SelectedWorksSection = () => {
     handleItemFocus,
     getIsActive,
   } = useTimeline({
-    totalItems: works.length,
     currentIndex,
     isMobile,
     onItemClick: goToIndex,
@@ -95,8 +94,8 @@ export const SelectedWorksSection = () => {
     <section
       ref={sectionRef}
       className="section-shell max-w-[1280px] mx-auto pb-24 px-5 md:px-10 flex flex-col"
-      style={{ 
-        background: "#FCFCFC", 
+      style={{
+        background: "#FCFCFC",
         paddingTop: "120px",
         gap: "clamp(32px, 8vw, 80px)"
       }}

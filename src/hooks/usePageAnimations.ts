@@ -86,9 +86,12 @@ export const usePageAnimations = ({
       );
     }
 
+    // Capture ref value for cleanup
+    const currentItems = itemRefs.current;
+
     // Work list items animation (Desktop only)
     mm.add("(min-width: 768px)", () => {
-      itemRefs.current.forEach((ref, idx) => {
+      currentItems.forEach((ref, idx) => {
         if (!ref) return;
         // 첫 번째 항목(idx === 0)은 currentIndex가 0이므로 ScrollTrigger를 적용하지 않음
         if (idx === 0) {
@@ -135,7 +138,7 @@ export const usePageAnimations = ({
     return () => {
       mm.revert();
       ScrollTrigger.getAll().forEach((trigger) => {
-        if (trigger.vars?.trigger && itemRefs.current.includes(trigger.vars.trigger as HTMLDivElement)) {
+        if (trigger.vars?.trigger && currentItems.includes(trigger.vars.trigger as HTMLDivElement)) {
           trigger.kill();
         }
       });

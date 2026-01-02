@@ -3,13 +3,12 @@ import { getGSAP } from "@/lib/motion/gsap";
 import { prefersReducedMotion } from "@/lib/motion/constants";
 
 interface UseTimelineProps {
-  totalItems: number;
   currentIndex: number;
   isMobile: boolean;
   onItemClick: (index: number) => void;
 }
 
-export const useTimeline = ({ totalItems, currentIndex, isMobile, onItemClick }: UseTimelineProps) => {
+export const useTimeline = ({ currentIndex, isMobile, onItemClick }: UseTimelineProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const listContainerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -23,7 +22,7 @@ export const useTimeline = ({ totalItems, currentIndex, isMobile, onItemClick }:
     const elementRect = element.getBoundingClientRect();
 
     // 항목이 컨테이너의 가시 영역 안에 완전히 들어있는지 확인
-    const isFullyVisible = 
+    const isFullyVisible =
       elementRect.top >= containerRect.top &&
       elementRect.bottom <= containerRect.bottom;
 
@@ -100,7 +99,7 @@ export const useTimeline = ({ totalItems, currentIndex, isMobile, onItemClick }:
   // 초기 마운트 시 첫 번째 항목으로 스크롤 (Desktop only)
   useEffect(() => {
     if (isMobile) return;
-    
+
     const list = listContainerRef.current;
     if (!list) return;
 
