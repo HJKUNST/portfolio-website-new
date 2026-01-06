@@ -11,15 +11,18 @@ npm run dev
 ```
 
 ## Data (fully local)
-- Renders exclusively from `src/data/localPortfolio.ts`; there are zero network calls or Figma fetches.
+- Renders from bundled local content (`src/lib/works/data.ts`) with zero network calls.
 - `.env` values for Figma are not required and are ignored by the runtime; `.gitignore` already excludes any potential secret files.
 
 ## Project map
-- `src/app/page.tsx` — composes sections.
+- `src/app/(site)/page.tsx` — home composition.
+- `src/app/(site)/layout.tsx` — shared nav/footer + smooth scroll.
 - `src/app/layout.tsx` — fonts (Manrope, Crimson Pro) + metadata; `globals.css` holds tokens.
-- `src/components/sections/*` — hero 3D-on-scroll, belief fill text scrub, path draw, cursor arrows, teams dialog, CTA letters.
+- `src/features/home/*` — hero 3D-on-scroll, belief fill text scrub, path draw, cursor arrows, CTA letters.
+- `src/features/about/AboutMeSection.tsx` — about page layout and motion.
+- `src/features/works/SelectedWorksPage/*` — timeline + carousel for works.
 - `src/components/ui/Dialog.tsx` — Radix dialog with framer-motion polish.
-- `src/lib/figma/*` — adapter + `localPortfolio` fallback; normalization currently returns local data.
+- `src/lib/figma/*` — Figma types only (no runtime fetch).
 - `src/lib/motion/*` — GSAP registration, scroll helpers, pointer utilities.
 
 ## Animations & accessibility

@@ -1,28 +1,31 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getGSAP } from "@/lib/motion/gsap";
 import { prefersReducedMotion } from "@/lib/motion/constants";
 
 // 로딩 시작: 배경 #0b0b0b, 텍스트 #fcfcfc
 // 로딩 마무리: 배경 #fcfcfc, 텍스트 h3-em 색상
 const INITIAL_BG = "#0b0b0b";
-const FINAL_BG = "#fcfcfc";
 const INITIAL_TEXT = "#fcfcfc";
 const FINAL_TEXT = "#0b0b0b";
-const RING_COLOR = "#8DC3C6";
 
 export const LoadingScreen = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isVisible, setIsVisible] = useState(true);
   const [progress, setProgress] = useState(0);
   const [backgroundColor, setBackgroundColor] = useState(INITIAL_BG);
-  const [backgroundOpacity, setBackgroundOpacity] = useState(1);
   const [textColor, setTextColor] = useState(INITIAL_TEXT);
   const isCompleteRef = useRef(false);
+  const progressRef = useRef(0);
   const textRef = useRef<HTMLSpanElement>(null);
   const backgroundRef = useRef<HTMLDivElement>(null);
   const [showTextAnimation, setShowTextAnimation] = useState(false);
+
+  const updateProgress = (value: number) => {
+    progressRef.current = value;
+    setProgress(value);
+  };
 
   useEffect(() => {
     const minLoadingTime = 800; // 한 사이클 시간 (ms) - 더 빠르게
@@ -88,7 +91,7 @@ export const LoadingScreen = () => {
           ease: "power2.out",
           onUpdate: () => {
             if (!isCompleteRef.current) {
-              setProgress(Math.round(progressObj.value));
+              updateProgress(Math.round(progressObj.value));
             }
           },
           // 100%에 도달하면 반복하지 않고 멈춤
@@ -107,7 +110,7 @@ export const LoadingScreen = () => {
             currentProgress = 100; // 100%에서 멈춤 (리셋하지 않음)
             if (animationInterval) clearInterval(animationInterval);
           }
-          setProgress(currentProgress);
+          updateProgress(currentProgress);
           // 텍스트 색상을 #fcfcfc -> #0b0b0b 로 선형 전환
           const ratio = currentProgress / 100;
           const r = Math.round(252 + (11 - 252) * ratio);
@@ -265,7 +268,7 @@ export const LoadingScreen = () => {
       }
 
       const gsap = getGSAP();
-      const currentProgress = progress;
+      const currentProgress = progressRef.current;
       const animationStartProgress = 85; // 85%에서 애니메이션 시작
       const finalProgress = { value: currentProgress };
       let animationStarted = false;
@@ -281,7 +284,7 @@ export const LoadingScreen = () => {
           ease: "power2.out",
           onUpdate: () => {
             const p = Math.round(finalProgress.value);
-            setProgress(p);
+            updateProgress(p);
             // 85%에 도달하면 텍스트 애니메이션 시작 (더 빠른 느낌)
             if (p >= animationStartProgress && !animationStarted) {
               animationStarted = true;
@@ -292,10 +295,10 @@ export const LoadingScreen = () => {
       } else {
         // 간단한 완료 처리
         setTextColor(FINAL_TEXT);
-        setProgress(85);
+        updateProgress(85);
         setTimeout(() => {
           startTextAnimation();
-          setProgress(100);
+          updateProgress(100);
         }, 100); // 더 빠르게
       }
     });
@@ -320,7 +323,7 @@ export const LoadingScreen = () => {
         className="fixed inset-0 z-[99999] flex items-center justify-center"
         style={{
           backgroundColor: backgroundColor,
-          opacity: isVisible ? backgroundOpacity : 0,
+          opacity: isVisible ? 1 : 0,
           willChange: "opacity, background-color",
         }}
       >
@@ -366,4 +369,3 @@ export const LoadingScreen = () => {
     </>
   );
 };
-

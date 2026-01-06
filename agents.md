@@ -108,7 +108,7 @@ Role:
 - Integrate all parts into a coherent Next.js app and keep code quality high.
 
 Responsibilities:
-- Compose sections in `app/page.tsx`.
+- Compose sections in `app/(site)/page.tsx`.
 - Confirm the entire scroll narrative flows like the references.
 - Run a final pass against the QA checklist.
 
@@ -118,6 +118,6 @@ Rules:
 - Add a README describing architecture and how to extend.
 
 Deliverables:
-- `app/page.tsx`
+- `app/(site)/page.tsx`
 - `README.md`
 - Final QA punch-list

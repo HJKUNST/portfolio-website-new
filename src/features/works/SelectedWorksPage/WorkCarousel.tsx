@@ -1,11 +1,14 @@
 "use client";
 
-import { HeroCard, CardWithKey } from "../HeroSection";
+import { PortfolioCardPreview } from "@/components/ui/PortfolioCard";
+import { PortfolioCard } from "@/lib/portfolio/types";
 import { WorkItem } from "@/lib/works/types";
 import { CAROUSEL_GAP } from "@/lib/works/constants";
 
+type CarouselCard = PortfolioCard & { _key: string };
+
 interface WorkCarouselProps {
-  cards: CardWithKey[];
+  cards: CarouselCard[];
   works: WorkItem[];
   containerRef: React.RefObject<HTMLDivElement | null>;
   trackRef: React.RefObject<HTMLDivElement | null>;
@@ -44,7 +47,7 @@ export const WorkCarousel = ({
                 onMouseEnter={() => onCardHover(idx)}
                 onMouseLeave={() => onCardHover(null)}
               >
-                <HeroCard
+                <PortfolioCardPreview
                   card={card}
                   onClick={() => {
                     if (link) {
@@ -60,4 +63,3 @@ export const WorkCarousel = ({
     </div>
   );
 };
-

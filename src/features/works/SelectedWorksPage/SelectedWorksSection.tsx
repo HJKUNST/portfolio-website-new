@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useMemo, useCallback, useState } from "react";
-import { CarouselNav, CardWithKey } from "../HeroSection";
+import { CarouselNav } from "@/components/ui/CarouselNav";
 import { works } from "@/lib/works/data";
 import { WorkItem } from "@/lib/works/types";
 import { TitleStyle, BodyStyle } from "@/lib/works/constants";
@@ -10,6 +10,9 @@ import { useTimeline } from "@/hooks/useTimeline";
 import { usePageAnimations } from "@/hooks/usePageAnimations";
 import { TimelineList } from "./TimelineList";
 import { WorkCarousel } from "./WorkCarousel";
+import { PortfolioCard } from "@/lib/portfolio/types";
+
+type CarouselCard = PortfolioCard & { _key: string };
 
 export const SelectedWorksSection = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -32,7 +35,7 @@ export const SelectedWorksSection = () => {
   }, []);
 
   // Data Preparation
-  const carouselCards = useMemo<CardWithKey[]>(() => {
+  const carouselCards = useMemo<CarouselCard[]>(() => {
     return works.map((work) => ({
       title: work.title,
       subtitle: work.subtitle || "",
@@ -159,4 +162,3 @@ export const SelectedWorksSection = () => {
     </section>
   );
 };
-

@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
-import { SmoothScrollProvider } from "@/components/SmoothScrollProvider";
-import { SiteNav } from "@/components/layout/SiteNav";
-import { SiteFooter } from "@/components/layout/SiteFooter";
-import { AboutMeSection } from "@/components/sections/AboutMePage";
+import { AboutMeSection } from "@/features/about/AboutMeSection";
 
 export const metadata: Metadata = {
   title: "About Me | Laura HJ Kim",
@@ -30,16 +27,9 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <>
-      <SiteNav />
-      <SmoothScrollProvider>
-        <main className="flex min-h-screen flex-col relative">
-          <AboutMeSection />
-        </main>
-      </SmoothScrollProvider>
-      <SiteFooter />
-    </>
+    <main className="flex min-h-screen flex-col relative">
+      <AboutMeSection />
+    </main>
   );
 }
-
 

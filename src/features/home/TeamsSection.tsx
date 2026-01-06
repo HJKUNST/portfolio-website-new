@@ -3,15 +3,14 @@
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useState } from "react";
-import { PortfolioTeam } from "@/lib/figma/types";
-import { Dialog } from "../ui/Dialog";
+import { PortfolioTeam } from "@/lib/portfolio/types";
+import { Dialog } from "@/components/ui/Dialog";
 
 // ============================================
 // Types (타입 정의)
 // ============================================
 
 type Props = {
-  headline?: string;
   teams?: PortfolioTeam[];
 };
 
@@ -79,8 +78,6 @@ const CARD_OVERLAY_STYLE = {
 // ============================================
 // Default Data (기본 데이터)
 // ============================================
-
-const DEFAULT_HEADLINE = "Teams that I've made great outputs with — small teams working in rhythm.";
 
 const DEFAULT_TEAMS: PortfolioTeam[] = [
   {
@@ -236,7 +233,6 @@ const TeamDialog = ({
 // ============================================
 
 export const TeamsSection = ({
-  headline = DEFAULT_HEADLINE,
   teams = DEFAULT_TEAMS
 }: Props) => {
   // 팀 데이터

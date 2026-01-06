@@ -1,9 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useRef } from "react";
-import { ScrollTrigger, getGSAP } from "@/lib/motion/gsap";
-import { DEFAULT_EASE, MICRO_FAST, prefersReducedMotion } from "@/lib/motion/constants";
+import { useMemo, useRef } from "react";
 
 // ============================================
 // Types (타입 정의)
@@ -46,12 +44,10 @@ const DEFAULT_ICONS = [
 const AnimatedText = ({
   text,
   isHighlight = false,
-  baseIndex = 0,
   pushRef,
 }: {
   text: string;
   isHighlight?: boolean;
-  baseIndex: number;
   pushRef: (el: HTMLSpanElement | null) => void;
 }) => {
   // 단어 단위로 분리
@@ -60,9 +56,6 @@ const AnimatedText = ({
   return (
     <>
       {words.map((word, wordIdx) => {
-        // 현재 단어 이전까지의 글자 수 계산 (전역 인덱스 계산용)
-        const previousCharsCount = words.slice(0, wordIdx).join(" ").length + (wordIdx > 0 ? 1 : 0);
-
         return (
           <span
             key={`${isHighlight ? "high" : "std"}-word-${wordIdx}`}
@@ -71,9 +64,6 @@ const AnimatedText = ({
             style={isHighlight ? { lineHeight: 0.9 } : undefined}
           >
             {word.split("").map((letter, letterIdx) => {
-              // 전체 텍스트 내에서의 고유 인덱스
-              // const globalIdx = baseIndex + previousCharsCount + letterIdx; // (애니메이션 사용 시 필요)
-
               return (
                 <span
                   key={`${isHighlight ? "high" : "std"}-letter-${wordIdx}-${letterIdx}`}
@@ -141,46 +131,6 @@ export const LookingForTeamSection = ({
     }
   };
 
-  /* 
-   * GSAP 애니메이션 (현재는 주석 처리됨)
-   * 나중에 다시 활성화하려면 아래 주석을 해제하세요.
-   */
-  /*
-  useEffect(() => {
-    const gsap = getGSAP();
-    if (!gsap || !ScrollTrigger || prefersReducedMotion()) return;
-    if (!sectionRef.current) return;
-
-    // 기존 ref 초기화 (중복 방지)
-    // lettersRef.current = []; // 필요시 초기화 로직 추가
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top 85%",
-        end: "top 20%",
-        toggleActions: "play none none reverse",
-      },
-    });
-
-    tl.from(lettersRef.current, {
-      y: -40,
-      opacity: 0,
-      stagger: 0.035,
-      ease: DEFAULT_EASE,
-      duration: MICRO_FAST + 0.2,
-    }).from(
-      ctaRef.current,
-      { opacity: 0, y: 16, duration: MICRO_FAST },
-      "-=0.2",
-    );
-
-    return () => {
-      tl.kill();
-    };
-  }, []);
-  */
-
   return (
     <section
       ref={sectionRef}
@@ -197,7 +147,6 @@ export const LookingForTeamSection = ({
           {/* 기본 텍스트 */}
           <AnimatedText
             text={headline}
-            baseIndex={0}
             pushRef={addToRefs}
           />
           {" "}
@@ -205,7 +154,6 @@ export const LookingForTeamSection = ({
           <AnimatedText
             text={subheadline}
             isHighlight
-            baseIndex={headline.length}
             pushRef={addToRefs}
           />
         </p>
@@ -231,5 +179,3 @@ export const LookingForTeamSection = ({
     </section>
   );
 };
-
-

@@ -1,10 +1,10 @@
 "use client";
 
-import { forwardRef } from "react";
+import { forwardRef, type ReactNode } from "react";
 import { subtitleStyle } from "@/lib/works/constants";
 
 interface SectionSubtitleProps {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -17,4 +17,3 @@ export const SectionSubtitle = forwardRef<HTMLHeadingElement, SectionSubtitlePro
   )
 );
 SectionSubtitle.displayName = "SectionSubtitle";
-

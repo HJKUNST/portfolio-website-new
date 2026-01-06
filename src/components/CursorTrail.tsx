@@ -22,10 +22,7 @@ const TRAIL_ICONS = [
   "/cursor-trail/15-js.svg",
 ];
 
-const TRAIL_ICON_SIZE = "w-12 h-12";
-
 export const CursorTrail = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
   const infoRef = useRef<{
     currentImageIndex: number;
     lastX: number;

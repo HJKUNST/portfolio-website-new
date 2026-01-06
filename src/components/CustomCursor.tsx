@@ -9,10 +9,6 @@ type CustomCursorProps = {
   hoverSelectors?: string[];
   /** hover 시 커서 크기 배율 (기본값: 2) */
   hoverScale?: number;
-  /** hover 시 표시할 아이콘 (이미지 경로 또는 ReactNode) */
-  hoverIcon?: string | React.ReactNode;
-  /** 선택자별 아이콘 매핑 (선택자가 매칭되면 해당 아이콘 사용) */
-  selectorIcons?: Map<string, string | React.ReactNode>;
   /** mix-blend-difference 적용 여부 (기본값: true) */
   useBlendDifference?: boolean;
   /** 경로 변경 시 상태 리셋을 위한 key */
@@ -22,8 +18,6 @@ type CustomCursorProps = {
 export const CustomCursor = ({
   hoverSelectors = [],
   hoverScale = 4,
-  hoverIcon,
-  selectorIcons,
   useBlendDifference = true,
   pathname,
 }: CustomCursorProps) => {
