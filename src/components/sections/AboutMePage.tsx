@@ -89,15 +89,19 @@ export const AboutMeSection = () => {
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [isHovered, setIsHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isTallViewport, setIsTallViewport] = useState(false);
 
-  // Detect mobile
+  // Detect mobile and viewport aspect ratio
   useEffect(() => {
-    const checkMobile = () => {
+    const checkViewport = () => {
       setIsMobile(window.innerWidth < 768);
+      // Check if height is 1.5x or more than width (aspect ratio 1:1.5 or taller)
+      const aspectRatio = window.innerHeight / window.innerWidth;
+      setIsTallViewport(aspectRatio >= 1.5);
     };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    checkViewport();
+    window.addEventListener("resize", checkViewport);
+    return () => window.removeEventListener("resize", checkViewport);
   }, []);
 
   useEffect(() => {
@@ -112,45 +116,70 @@ export const AboutMeSection = () => {
     // Pinning Logic - Pin left column while right column scrolls
     mm.add("(min-width: 1024px)", () => {
       if (containerRef.current && leftColRef.current && rightColRef.current) {
-        ScrollTrigger.create({
-          trigger: sectionRef.current,
-          start: "top top", // Start when section enters viewport
-          end: () => {
-            const rightHeight = rightColRef.current?.offsetHeight || 0;
-            const leftHeight = leftColRef.current?.offsetHeight || 0;
-            const scrollDistance = Math.max(0, rightHeight - leftHeight);
-
-            const containerTop = containerRef.current?.offsetTop || 0;
-            const sectionTop = sectionRef.current?.offsetTop || 0;
-            const relativeTop = containerTop - sectionTop;
-
-            return `+=${relativeTop + scrollDistance}`;
-          },
-          pin: leftColRef.current,
-          pinSpacing: false,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        });
+        // Calculate heights safely
+        const rightHeight = rightColRef.current.offsetHeight || 0;
+        const leftHeight = leftColRef.current.offsetHeight || 0;
+        const scrollDistance = Math.max(0, rightHeight - leftHeight);
+        
+        // Only pin if right column is taller than left column
+        if (scrollDistance > 0) {
+          ScrollTrigger.create({
+            trigger: sectionRef.current,
+            start: "top top",
+            end: () => {
+              // Use viewport height as minimum to prevent issues when height > width
+              const viewportHeight = window.innerHeight;
+              const minEnd = viewportHeight;
+              const calculatedEnd = scrollDistance;
+              
+              // Return the larger value to ensure proper scrolling
+              return `+=${Math.max(minEnd, calculatedEnd)}`;
+            },
+            pin: leftColRef.current,
+            pinSpacing: false,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+          });
+        }
       }
     });
 
+    // Check viewport size and aspect ratio for focused effect
+    // Focused effect should be DISABLED only when:
+    // - width > 1024px (lg breakpoint) AND aspectRatio >= 1.5 (tall viewport)
+    // Otherwise, focused effect is ENABLED
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const aspectRatio = viewportHeight / viewportWidth;
+    const isLgOrAbove = viewportWidth > 1024;
+    const isTallViewport = aspectRatio >= 1.5;
+    
+    // Disable focused effect only for large width + tall viewport
+    const shouldDisableFocusedEffect = isLgOrAbove && isTallViewport;
+
     // Title animation
     if (titleRef.current) {
-      gsap.fromTo(
-        titleRef.current,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: titleRef.current,
-            start: "top 80%",
-            toggleActions: "play none none reverse",
-          },
-        }
-      );
+      if (shouldDisableFocusedEffect) {
+        // Large width + tall viewport: set opacity to 1 immediately
+        gsap.set(titleRef.current, { opacity: 1, y: 0 });
+      } else {
+        // Other cases: animate on scroll
+        gsap.fromTo(
+          titleRef.current,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.7,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: titleRef.current,
+              start: "top 80%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      }
     }
 
     // Content sections animation
@@ -158,39 +187,70 @@ export const AboutMeSection = () => {
       if (!ref) return;
 
       if (index === 0) {
-        // Left Column (Photo) - Keep original entrance or simple fade
-        gsap.fromTo(
-          ref,
-          { opacity: 0, y: 40 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.7,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: ref,
-              start: "top 85%",
-              toggleActions: "play none none reverse",
-            },
-          }
-        );
+        // Left Column (Photo)
+        if (shouldDisableFocusedEffect) {
+          // Large width + tall viewport: set opacity to 1 immediately
+          gsap.set(ref, { opacity: 1, y: 0 });
+        } else {
+          // Other cases: animate on scroll
+          gsap.fromTo(
+            ref,
+            { opacity: 0, y: 40 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.7,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: ref,
+                start: "top 85%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
       } else {
-        // Right Column Items - Focus Effect (Opacity 0.2 -> 1 when in center)
-        gsap.fromTo(
-          ref,
-          { opacity: 0.2 },
-          {
-            opacity: 1,
-            duration: 0.5,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: ref,
-              start: "top 70%", // Enter focus area
-              end: "bottom 30%", // Leave focus area
-              toggleActions: "play reverse play reverse",
-            },
+        // Right Column Items - Focus Effect
+        if (shouldDisableFocusedEffect) {
+          // Large width + tall viewport: set all to opacity 1 immediately (no focus effect)
+          gsap.set(ref, { opacity: 1 });
+        } else {
+          // Other cases: use focus effect
+          // First item (About Me) should be visible initially
+          const initialOpacity = index === 1 ? 1 : 0.2;
+          
+          gsap.fromTo(
+            ref,
+            { opacity: initialOpacity },
+            {
+              opacity: 1,
+              duration: 0.5,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: ref,
+                start: index === 1 ? "top 90%" : "top 70%", // About Me starts earlier
+                end: "bottom 30%",
+                toggleActions: "play reverse play reverse",
+                // For About Me, ensure it's visible when at top
+                onEnter: () => {
+                  if (index === 1) {
+                    gsap.set(ref, { opacity: 1 });
+                  }
+                },
+                onLeave: () => {
+                  if (index === 1) {
+                    gsap.set(ref, { opacity: 1 });
+                  }
+                },
+              },
+            }
+          );
+          
+          // Ensure About Me is visible at page top
+          if (index === 1) {
+            gsap.set(ref, { opacity: 1 });
           }
-        );
+        }
       }
     });
 
@@ -279,6 +339,10 @@ export const AboutMeSection = () => {
             title="About Me"
             ref={(el) => {
               contentRefs.current[1] = el;
+              // Ensure About Me is visible initially
+              if (el) {
+                el.style.opacity = "1";
+              }
             }}
           >
             <SectionBody>

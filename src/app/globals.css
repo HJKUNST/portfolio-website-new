@@ -238,6 +238,57 @@ img {
   background: #85ADAF;
 }
 
+/* Tooltip for external links */
+.tooltip {
+  position: absolute;
+  top: 100%;
+  background: var(--gray-900);
+  color: var(--gray-50);
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  font-family: var(--font-manrope), Manrope, sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  /* Prevent tooltip from going outside viewport */
+  max-width: calc(100vw - 32px);
+  word-wrap: break-word;
+}
+
+/* Default tooltip positioning - centered, constrained to viewport */
+.group:not(.last-item) .tooltip {
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  /* Ensure tooltip doesn't overflow viewport */
+  /* Adjust left position to keep tooltip within bounds */
+  left: clamp(16px, 50%, calc(100vw - 16px));
+  transform: translateX(-50%) translateY(8px);
+  /* If tooltip would overflow right, shift it left */
+  margin-left: max(calc(-50vw + 16px), 0px);
+}
+
+.group:not(.last-item):hover .tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(12px);
+}
+
+/* Last item (Resume) - right aligned */
+.last-item .tooltip {
+  left: auto;
+  right: 0;
+  transform: translateX(0) translateY(8px);
+}
+
+.last-item:hover .tooltip {
+  opacity: 1;
+  transform: translateX(0) translateY(12px);
+}
+
 /* Photo blur effect */
 .photo-blur-image {
   transition: filter 0.5s ease, outline 0.5s ease, opacity 0.5s ease;

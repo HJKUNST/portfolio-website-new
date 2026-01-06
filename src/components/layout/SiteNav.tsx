@@ -20,11 +20,23 @@ export const SiteNav = () => {
         <Link href="/works" className="hover:!text-[var(--secondary)] transition-colors">
           Works
         </Link>
-        <a href="https://hjkunst.github.io/" className="hover:!text-[var(--secondary)] transition-colors">
+        <a
+          href="https://hjkunst.github.io/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group relative hover:!text-[var(--secondary)] transition-colors"
+        >
           Blog
+          <span className="tooltip">Opens in new tab</span>
         </a>
-        <a href="https://docsend.com/v/h2z52/laura_kim_productdesigner_detailed" target="_blank" className="hover:!text-[var(--secondary)] transition-colors">
+        <a
+          href="https://docsend.com/v/h2z52/laura_kim_productdesigner_detailed"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group relative hover:!text-[var(--secondary)] transition-colors last-item"
+        >
           Resume
+          <span className="tooltip">Opens in new tab</span>
         </a>
       </nav>
     </header>

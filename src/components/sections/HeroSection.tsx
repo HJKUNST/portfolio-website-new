@@ -8,6 +8,8 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import { PortfolioCard } from "@/lib/figma/types";
 import { getGSAP } from "@/lib/motion/gsap";
 import { prefersReducedMotion } from "@/lib/motion/constants";
+import { works } from "@/lib/works/data";
+import { WorkItem } from "@/lib/works/types";
 import styles from "./HeroSection.module.css";
 
 // ============================================
@@ -109,6 +111,11 @@ export const HeroSection = ({
       _key: `hero-card-${idx}`,
     }));
   }, [cards]);
+
+  // Get link for each card (portfolioLink 우선, 없으면 websiteLink)
+  const getWorkLink = useCallback((work: WorkItem) => {
+    return work.portfolioLink || work.websiteLink || undefined;
+  }, []);
 
   const totalCards = heroCards.length;
 
@@ -360,9 +367,29 @@ export const HeroSection = ({
           className="flex h-full items-stretch"
           style={{ gap: GAP, width: "max-content" }}
         >
-          {heroCards.map((card) => (
-            <HeroCard key={card._key} card={card} />
-          ))}
+          {heroCards.map((card, idx) => {
+            // Find corresponding work by matching card title with work title
+            const work = works.find((w) => {
+              // Match by title (handle multi-line titles)
+              const cardTitle = card.title.replace(/\n/g, " ").trim();
+              const workTitle = w.title.replace(/\n/g, " ").trim();
+              return cardTitle === workTitle || cardTitle.includes(workTitle) || workTitle.includes(cardTitle);
+            }) || works[idx]; // Fallback to index if no match found
+            
+            const link = work ? getWorkLink(work) : undefined;
+            
+            return (
+              <HeroCard
+                key={card._key}
+                card={card}
+                onClick={() => {
+                  if (link) {
+                    window.open(link, "_blank", "noopener,noreferrer");
+                  }
+                }}
+              />
+            );
+          })}
         </div>
       </div>
 
