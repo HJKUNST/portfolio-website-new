@@ -17,6 +17,7 @@ interface TimelineListProps {
   onItemMouseLeave: () => void;
   onItemFocus: (e: React.FocusEvent<HTMLDivElement>) => void;
   timelineSubtitleRef: React.RefObject<HTMLHeadingElement | null>;
+  className?: string;
 }
 
 export const TimelineList = forwardRef<HTMLDivElement, TimelineListProps>(
@@ -31,9 +32,10 @@ export const TimelineList = forwardRef<HTMLDivElement, TimelineListProps>(
     onItemMouseLeave,
     onItemFocus,
     timelineSubtitleRef,
+    className,
   }) => {
     return (
-      <div className="relative mb-8">
+      <div className={clsx("relative mb-8", className)}>
         <SectionSubtitle
           ref={timelineSubtitleRef}
           className="text-left !text-h3-em my-12"
@@ -50,12 +52,12 @@ export const TimelineList = forwardRef<HTMLDivElement, TimelineListProps>(
           ref={listContainerRef}
           className={clsx(
             "gap-12 grid justify-end pl-4 pr-4",
-            isMobile ? "" : "overflow-y-auto custom-scrollbar"
+            "md:overflow-y-auto md:custom-scrollbar md:max-h-[clamp(400px,36vh,600px)]",
+            "max-h-none overflow-visible"
           )}
           style={{
             direction: "rtl",
-            scrollbarGutter: isMobile ? "auto" : "stable",
-            maxHeight: isMobile ? "auto" : "clamp(400px, 36vh, 600px)",
+            scrollbarGutter: "stable",
           }}
         >
           {works.map((work, idx) => (

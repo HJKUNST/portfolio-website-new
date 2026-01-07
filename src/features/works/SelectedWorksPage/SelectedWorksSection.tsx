@@ -104,7 +104,7 @@ export const SelectedWorksSection = () => {
       }}
     >
       {/* Top Section: Split Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-24 items-start">
+      <div className="flex flex-col md:grid md:grid-cols-2 gap-8 md:gap-24 items-start">
         {/* Left: Title & Description */}
         <div>
           <h1 ref={titleRef} className="text-h1-gradient mb-4" style={TitleStyle}>
@@ -135,6 +135,7 @@ export const SelectedWorksSection = () => {
             onItemMouseLeave={handleItemMouseLeave}
             onItemFocus={handleItemFocus}
             timelineSubtitleRef={timelineSubtitleRef}
+            className="w-full"
           />
         </div>
       </div>
