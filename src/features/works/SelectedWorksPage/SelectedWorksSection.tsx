@@ -126,7 +126,6 @@ export const SelectedWorksSection = () => {
         <div className="md:text-right md:flex md:flex-col md:items-end">
           <TimelineList
             works={works}
-            isMobile={isMobile}
             listContainerRef={listContainerRef}
             itemRefs={itemRefs}
             getIsActive={getIsActive}

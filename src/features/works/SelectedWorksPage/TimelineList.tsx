@@ -8,7 +8,6 @@ import clsx from "clsx";
 
 interface TimelineListProps {
   works: WorkItem[];
-  isMobile: boolean;
   listContainerRef: React.RefObject<HTMLDivElement | null>;
   itemRefs: React.RefObject<(HTMLDivElement | null)[]>;
   getIsActive: (idx: number) => boolean;
@@ -23,7 +22,6 @@ interface TimelineListProps {
 export const TimelineList = forwardRef<HTMLDivElement, TimelineListProps>(
   ({
     works,
-    isMobile,
     listContainerRef,
     itemRefs,
     getIsActive,
