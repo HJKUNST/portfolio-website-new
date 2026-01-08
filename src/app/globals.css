@@ -289,6 +289,38 @@ img {
   transform: translateX(0) translateY(12px);
 }
 
+/* Footer tooltip - appears above elements */
+.footer-tooltip-container .tooltip {
+  top: auto !important;
+  bottom: 100% !important;
+}
+
+.footer-tooltip-container .group:not(.last-item) .tooltip {
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px) !important;
+  /* Ensure tooltip doesn't overflow viewport */
+  left: clamp(16px, 50%, calc(100vw - 16px));
+  transform: translateX(-50%) translateY(-8px) !important;
+  /* If tooltip would overflow right, shift it left */
+  margin-left: max(calc(-50vw + 16px), 0px);
+}
+
+.footer-tooltip-container .group:not(.last-item):hover .tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-12px) !important;
+}
+
+.footer-tooltip-container .last-item .tooltip {
+  left: auto;
+  right: 0;
+  transform: translateX(0) translateY(-8px) !important;
+}
+
+.footer-tooltip-container .last-item:hover .tooltip {
+  opacity: 1;
+  transform: translateX(0) translateY(-12px) !important;
+}
+
 /* Photo blur effect */
 .photo-blur-image {
   transition: filter 0.5s ease, outline 0.5s ease, opacity 0.5s ease;

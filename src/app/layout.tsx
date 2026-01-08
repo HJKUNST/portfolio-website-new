@@ -21,11 +21,21 @@ const crimsonPro = Crimson_Pro({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   title: "Laura HJ Kim | Portfolio",
   description:
     "Product Designer at the intersection of design, engineering, and finance.",
   icons: {
-    icon: '/favicon.png', // Uses favicon.png from the public directory
+    icon: {
+      url: '/favicon.png',
+      type: 'image/png',
+      sizes: '32x32',
+    },
+    apple: {
+      url: '/favicon.png',
+      type: 'image/png',
+      sizes: '32x32',
+    },
   },
   openGraph: {
     title: "Laura HJ Kim | Portfolio",

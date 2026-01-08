@@ -1,6 +1,5 @@
 "use client";
 
-import { forwardRef } from "react";
 import { WorkItem } from "@/lib/works/types";
 import { TimelineItem } from "./TimelineItem";
 import { SectionSubtitle } from "./SectionSubtitle";
@@ -19,19 +18,18 @@ interface TimelineListProps {
   className?: string;
 }
 
-export const TimelineList = forwardRef<HTMLDivElement, TimelineListProps>(
-  ({
-    works,
-    listContainerRef,
-    itemRefs,
-    getIsActive,
-    onItemClick,
-    onItemMouseEnter,
-    onItemMouseLeave,
-    onItemFocus,
-    timelineSubtitleRef,
-    className,
-  }) => {
+export const TimelineList = ({
+  works,
+  listContainerRef,
+  itemRefs,
+  getIsActive,
+  onItemClick,
+  onItemMouseEnter,
+  onItemMouseLeave,
+  onItemFocus,
+  timelineSubtitleRef,
+  className,
+}: TimelineListProps) => {
     return (
       <div className={clsx("relative mb-8", className)}>
         <SectionSubtitle
@@ -86,7 +84,5 @@ export const TimelineList = forwardRef<HTMLDivElement, TimelineListProps>(
         />
       </div>
     );
-  }
-);
-TimelineList.displayName = "TimelineList";
+};
 

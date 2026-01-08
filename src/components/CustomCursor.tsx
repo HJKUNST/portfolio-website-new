@@ -26,6 +26,7 @@ export const CustomCursor = ({
   const DISPLAY_CURSOR_SIZE = 12;
   const SCALE_DOWN = DISPLAY_CURSOR_SIZE / BASE_CURSOR_SIZE;
   const cursorRef = useRef<HTMLDivElement | null>(null);
+  const circleRef = useRef<SVGCircleElement | null>(null);
   const [cursorColor, setCursorColor] = useState("rgba(141, 195, 198, 1)");
 
   useEffect(() => {
@@ -36,13 +37,16 @@ export const CustomCursor = ({
     if (!gsap) return;
 
     const cursor = cursorRef.current;
+    // circleRef는 나중에 설정되므로 함수 내에서 직접 접근
+    const getCircle = () => circleRef.current;
 
     // 초기 위치 설정 (중앙 정렬)
     gsap.set(cursor, { xPercent: -50, yPercent: -50 });
 
-    // quickTo를 사용한 부드러운 움직임
-    const xTo = gsap.quickTo(cursor, "x", { duration: 0.6, ease: "power3" });
-    const yTo = gsap.quickTo(cursor, "y", { duration: 0.6, ease: "power3" });
+    // 성능 최적화: 더 빠른 반응성을 위해 duration 단축 및 ease 조정
+    // Safari와 일부 브라우저에서 더 나은 성능을 위해 power2 사용
+    const xTo = gsap.quickTo(cursor, "x", { duration: 0.3, ease: "power2.out" });
+    const yTo = gsap.quickTo(cursor, "y", { duration: 0.3, ease: "power2.out" });
 
     // 색상 정의
     const BLUE = useBlendDifference ? { r: 141, g: 195, b: 198 } : { r: 11, g: 11, b: 11 };
@@ -57,6 +61,26 @@ export const CustomCursor = ({
     let isHovering = false;
     let isMoving = false;
 
+    // 성능 최적화: 이전 색상 값을 추적하여 불필요한 업데이트 방지
+    let lastColorString = `rgba(${BLUE.r}, ${BLUE.g}, ${BLUE.b}, 1)`;
+
+    // 성능 최적화: ref를 사용한 직접 DOM 업데이트로 setState 호출 최소화
+    const updateColorDirectly = (r: number, g: number, b: number) => {
+      const colorString = `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, 1)`;
+      
+      // 직접 DOM 업데이트 (항상 수행 - 성능에 큰 영향 없음)
+      const circle = getCircle();
+      if (circle) {
+        circle.setAttribute("fill", colorString);
+      }
+      
+      // React state는 색상이 실제로 변경되었을 때만 업데이트
+      if (lastColorString !== colorString) {
+        lastColorString = colorString;
+        setCursorColor(colorString);
+      }
+    };
+
     // 초기화: props 변경 시 스케일/상태 리셋
     // 페이지 전환 시 hover 상태를 강제로 리셋
     const resetCursorState = () => {
@@ -66,7 +90,7 @@ export const CustomCursor = ({
       // 색상을 기본값으로 리셋
       if (colorTween) colorTween.kill();
       Object.assign(currentColorObj, BLUE);
-      setCursorColor(`rgba(${BLUE.r}, ${BLUE.g}, ${BLUE.b}, 1)`);
+      updateColorDirectly(BLUE.r, BLUE.g, BLUE.b);
     };
 
     // 초기 상태 리셋
@@ -94,7 +118,8 @@ export const CustomCursor = ({
         duration: 0.4,
         ease: "power2.out",
         onUpdate: () => {
-          setCursorColor(`rgba(${Math.round(currentColorObj.r)}, ${Math.round(currentColorObj.g)}, ${Math.round(currentColorObj.b)}, 1)`);
+          // 직접 DOM 업데이트로 성능 향상
+          updateColorDirectly(currentColorObj.r, currentColorObj.g, currentColorObj.b);
         },
       });
     };
@@ -116,6 +141,21 @@ export const CustomCursor = ({
     const MOVEMENT_THRESHOLD = 1;
     const STOP_DELAY = 200;
 
+    // 성능 최적화: requestAnimationFrame을 사용한 throttling
+    let rafId: number | null = null;
+    let pendingX = 0;
+    let pendingY = 0;
+    let hasPendingUpdate = false;
+
+    const updateCursorPosition = () => {
+      if (hasPendingUpdate) {
+        xTo(pendingX);
+        yTo(pendingY);
+        hasPendingUpdate = false;
+      }
+      rafId = null;
+    };
+
     const handleScroll = () => {
       const scrollDelta = Math.abs(window.scrollY - lastScrollY);
       if (scrollDelta > MOVEMENT_THRESHOLD) {
@@ -129,10 +169,20 @@ export const CustomCursor = ({
     };
 
     const handleMouseMove = (e: MouseEvent) => {
+      // 성능 최적화: requestAnimationFrame으로 throttling
+      pendingX = e.clientX;
+      pendingY = e.clientY;
+      hasPendingUpdate = true;
+
+      if (!rafId) {
+        rafId = requestAnimationFrame(updateCursorPosition);
+      }
+
       if (isFirstMove) {
         lastX = e.clientX;
         lastY = e.clientY;
         isFirstMove = false;
+        // 첫 이동은 즉시 업데이트
         xTo(e.clientX);
         yTo(e.clientY);
         return;
@@ -152,8 +202,6 @@ export const CustomCursor = ({
 
       lastX = e.clientX;
       lastY = e.clientY;
-      xTo(e.clientX);
-      yTo(e.clientY);
     };
 
     const handleMouseEnter = () => {
@@ -194,6 +242,7 @@ export const CustomCursor = ({
     window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
+      // 성능 최적화: 모든 이벤트 리스너와 애니메이션 정리
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("scroll", handleScroll);
       hoverElements.forEach((el) => {
@@ -202,6 +251,7 @@ export const CustomCursor = ({
       });
       if (movementTimeout) clearTimeout(movementTimeout);
       if (colorTween) colorTween.kill();
+      if (rafId !== null) cancelAnimationFrame(rafId);
     };
   }, [hoverSelectors, hoverScale, useBlendDifference, pathname]);
 
@@ -209,7 +259,13 @@ export const CustomCursor = ({
     <div
       ref={cursorRef}
       className={`fixed top-0 left-0 pointer-events-none z-[9999] max-[700px]:hidden ${useBlendDifference ? "mix-blend-difference" : ""}`}
-      style={{ willChange: "transform", transform: "translate3d(0,0,0)" }}
+      style={{ 
+        willChange: "transform", 
+        transform: "translate3d(0,0,0)",
+        // GPU 가속 강화 및 브라우저 호환성 개선
+        backfaceVisibility: "hidden",
+        perspective: 1000,
+      }}
     >
       <div
         className="relative"
@@ -230,6 +286,7 @@ export const CustomCursor = ({
           style={{ display: "block" }}
         >
           <circle
+            ref={circleRef}
             cx={BASE_CURSOR_SIZE / 2}
             cy={BASE_CURSOR_SIZE / 2}
             r={BASE_CURSOR_SIZE / 2}
